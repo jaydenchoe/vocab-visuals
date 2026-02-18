@@ -62,6 +62,14 @@ body {
 .header-left h1 { font-size: 1.15rem; font-weight: 700; }
 .header-sub { font-size: 0.78rem; opacity: 0.7; }
 .header-right { display: flex; gap: 8px; }
+.btn-home {
+  background: rgba(255,255,255,0.12); border: none; color: #fff;
+  padding: 4px 12px; border-radius: 6px; cursor: pointer;
+  font-size: 0.85rem; font-weight: 500; text-decoration: none;
+  display: flex; align-items: center; gap: 4px;
+  transition: background 0.2s; margin-right: 8px;
+}
+.btn-home:hover { background: rgba(255,255,255,0.25); }
 .btn-icon {
   background: rgba(255,255,255,0.12); border: none; color: #fff;
   width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
@@ -209,6 +217,7 @@ footer {
       <span class="header-sub">자연과 과학 — 186 words / 28 scenes</span>
     </div>
     <div class="header-right">
+      <a href="../" class="btn-home">🏠 홈</a>
       <button id="theme-toggle" class="btn-icon" title="Dark/Light Mode">🌙</button>
     </div>
   </div>
