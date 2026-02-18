@@ -307,16 +307,16 @@ const vocabData = {"categories": [{"id": "responsibility_area", "name": "Respons
             html += '<div class="media-block">';
             html += '<div class="media-header song">🎵 Recommended Song</div>';
             html += '<div class="media-title">🎵 ' + esc(g.song_title) + ' — ' + esc(g.song_artist || "") + ' <a href="' + url + '" target="_blank" rel="noopener" class="apple-music-link" title="Apple Music에서 듣기"><svg class="apple-music-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M23.994 6.124a9.23 9.23 0 0 0-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043a5.022 5.022 0 0 0-1.877-.726 10.496 10.496 0 0 0-1.564-.15c-.04-.003-.083-.01-.124-.013H5.986c-.152.01-.303.017-.455.026-.747.043-1.49.123-2.193.4-1.336.53-2.3 1.452-2.865 2.78-.192.448-.292.925-.363 1.408-.056.392-.088.785-.1 1.18 0 .032-.007.062-.01.093v12.223c.01.14.017.283.027.424.05.815.154 1.624.497 2.373.65 1.42 1.738 2.353 3.234 2.802.42.127.856.187 1.297.228.473.044.948.06 1.423.06h12.142c.18-.012.36-.02.54-.03.727-.04 1.45-.11 2.14-.36 1.44-.52 2.41-1.45 3.01-2.87.18-.43.29-.88.36-1.34.08-.51.12-1.02.13-1.53-.01-4.16-.01-8.33 0-12.5zM17.87 12.97l-.002.058c0 2.697.002 5.394-.002 8.09 0 .36-.037.717-.144 1.064-.2.63-.64 1.03-1.264 1.244-.37.126-.756.18-1.15.197-.634.027-1.24-.07-1.768-.434-.752-.516-1.063-1.238-.94-2.14.09-.636.47-1.08 1.015-1.38.453-.25.946-.378 1.448-.488.37-.082.742-.148 1.103-.266.384-.126.585-.377.613-.792.01-.138.006-.277.006-.415V8.674c0-.2-.043-.3-.236-.256-.597.136-1.193.276-1.79.413l-4.142.957c-.122.03-.164.085-.163.21v8.74c0 .18.007.363-.012.54-.07.65-.32 1.2-.86 1.59-.41.296-.878.434-1.378.488-.6.065-1.18-.01-1.712-.313-.85-.48-1.196-1.236-1.1-2.186.07-.688.44-1.175 1.013-1.498.395-.223.826-.35 1.264-.44.464-.098.932-.18 1.39-.3.325-.083.536-.284.597-.628.02-.117.025-.238.025-.357V6.334c0-.307.055-.396.353-.467l6.52-1.502c.156-.036.314-.066.472-.098.196-.04.3.02.3.224v8.48z"/></svg></a></div>';
-            if (g.song_intro) html += '<div class="media-desc">' + esc(g.song_intro) + '</div>';
-            if (g.song_desc) html += '<div class="media-desc">' + esc(g.song_desc) + '</div>';
+            if (g.song_intro) html += '<div class="media-desc">' + boldify(esc(g.song_intro)) + '</div>';
+            if (g.song_desc) html += '<div class="media-desc">' + boldify(esc(g.song_desc)) + '</div>';
             html += '</div>';
           }
           if (g.movie_title) {
             html += '<div class="media-block">';
             html += '<div class="media-header movie">🎬 Recommended Movie</div>';
             html += '<div class="media-title">🎬 ' + esc(g.movie_title) + ' (' + (g.movie_year || "") + ')</div>';
-            if (g.movie_desc) html += '<div class="media-desc">' + esc(g.movie_desc) + '</div>';
-            if (g.movie_connection) html += '<div class="media-desc movie-conn">' + esc(g.movie_connection) + '</div>';
+            if (g.movie_desc) html += '<div class="media-desc">' + boldify(esc(g.movie_desc)) + '</div>';
+            if (g.movie_connection) html += '<div class="media-desc movie-conn">' + boldify(esc(g.movie_connection)) + '</div>';
             html += '</div>';
           }
           html += '</div>';
