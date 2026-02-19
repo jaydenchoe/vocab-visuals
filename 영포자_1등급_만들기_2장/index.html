@@ -186,6 +186,13 @@ body {
 }
 .apple-music-link:hover { transform: scale(1.15); opacity: 0.85; }
 .apple-music-icon { width: 20px; height: 20px; }
+.imdb-link {
+  display: inline-flex; align-items: center; vertical-align: middle;
+  color: #f5c518; text-decoration: none; margin-left: 8px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.imdb-link:hover { transform: scale(1.15); opacity: 0.85; }
+.imdb-icon { width: 24px; height: 14px; }
 .media-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.55; }
 .movie-conn { color: var(--text-muted); margin-top: 2px; }
 
@@ -275,6 +282,12 @@ const vocabData = {"categories": [{"id": "nature_and_science_tools_and_materials
     return "https://music.apple.com/search?term=" + encodeURIComponent(term);
   }
 
+  // ── IMDB URL ──
+  function imdbUrl(title, year) {
+    var term = (title || "") + (year ? " " + year : "");
+    return "https://www.imdb.com/find/?q=" + encodeURIComponent(term.trim());
+  }
+
   // ── Render all categories ──
   function renderAll() {
     let html = "";
@@ -324,7 +337,8 @@ const vocabData = {"categories": [{"id": "nature_and_science_tools_and_materials
           if (g.movie_title) {
             html += '<div class="media-block">';
             html += '<div class="media-header movie">🎬 Recommended Movie</div>';
-            html += '<div class="media-title">🎬 ' + esc(g.movie_title) + ' (' + (g.movie_year || "") + ')</div>';
+            const imdbLink = imdbUrl(g.movie_title, g.movie_year);
+            html += '<div class="media-title">🎬 ' + esc(g.movie_title) + ' (' + (g.movie_year || "") + ') <a href="' + imdbLink + '" target="_blank" rel="noopener" class="imdb-link" title="IMDb에서 보기"><svg class="imdb-icon" viewBox="0 0 64 32" fill="currentColor"><rect width="64" height="32" rx="4"/><text x="32" y="22" text-anchor="middle" font-family="Impact,Arial Black,sans-serif" font-size="18" font-weight="700" fill="#000" letter-spacing="1">IMDb</text></svg></a></div>';
             if (g.movie_desc) html += '<div class="media-desc">' + boldify(esc(g.movie_desc)) + '</div>';
             if (g.movie_connection) html += '<div class="media-desc movie-conn">' + boldify(esc(g.movie_connection)) + '</div>';
             html += '</div>';
