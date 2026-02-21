@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>영포자 1등급 만들기 7장 — Vocabulary Visuals</title>
+<style>
+
+/* ===== CSS Variables & Theme ===== */
+:root {
+  --bg: #f8f9fa;
+  --bg-card: #ffffff;
+  --bg-header: #1a1a2e;
+  --text: #1a1a2e;
+  --text-secondary: #555;
+  --text-muted: #888;
+  --border: #e0e0e0;
+  --accent: #4361ee;
+  --accent-light: #e8edff;
+  --song-color: #7b2d8e;
+  --movie-color: #b33a3a;
+  --bold-color: #2563eb;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --radius: 12px;
+  --nav-h: 48px;
+  --header-h: 64px;
+}
+[data-theme="dark"] {
+  --bg: #0f0f1a;
+  --bg-card: #1a1a2e;
+  --bg-header: #0a0a15;
+  --text: #e8e8f0;
+  --text-secondary: #b0b0c0;
+  --text-muted: #777;
+  --border: #2a2a3e;
+  --accent: #6d8aff;
+  --accent-light: #1e2640;
+  --bold-color: #7dacff;
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + var(--nav-h) + 12px); }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+  background: var(--bg); color: var(--text);
+  line-height: 1.6; min-height: 100vh;
+  padding-top: calc(var(--header-h) + var(--nav-h));
+}
+
+/* ===== Header ===== */
+#header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--bg-header); color: #fff; height: var(--header-h);
+}
+.header-inner {
+  max-width: 900px; margin: 0 auto; height: 100%;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px;
+}
+.header-left h1 { font-size: 1.15rem; font-weight: 700; }
+.header-sub { font-size: 0.78rem; opacity: 0.7; }
+.header-right { display: flex; gap: 8px; }
+.btn-icon {
+  background: rgba(255,255,255,0.12); border: none; color: #fff;
+  width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+  font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.btn-icon:hover { background: rgba(255,255,255,0.25); }
+
+/* ===== Category Nav ===== */
+#cat-nav {
+  position: fixed; top: var(--header-h); left: 0; right: 0; z-index: 99;
+  background: var(--bg); border-bottom: 1px solid var(--border);
+  height: var(--nav-h);
+}
+.cat-tabs-wrap {
+  max-width: 900px; margin: 0 auto; height: 100%;
+  display: flex; align-items: center; gap: 4px;
+  padding: 0 12px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.cat-tabs-wrap::-webkit-scrollbar { display: none; }
+.cat-tab {
+  flex-shrink: 0; padding: 6px 14px; border: none; border-radius: 20px;
+  background: transparent; color: var(--text-secondary); cursor: pointer;
+  font-size: 0.82rem; font-weight: 500; white-space: nowrap;
+  transition: all 0.2s;
+}
+.cat-tab:hover { background: var(--accent-light); }
+.cat-tab.active { background: var(--accent); color: #fff; font-weight: 600; }
+
+/* ===== Main Content ===== */
+#main { max-width: 1080px; margin: 0 auto; padding: 20px 16px 60px; }
+
+/* ===== Category Section ===== */
+.cat-section { margin-bottom: 48px; }
+.cat-header {
+  font-size: 1.4rem; font-weight: 700; margin-bottom: 20px;
+  padding-bottom: 10px; border-bottom: 2px solid var(--accent);
+  color: var(--accent);
+}
+
+/* ===== Scene Card ===== */
+.scene-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  margin-bottom: 28px; box-shadow: var(--shadow);
+}
+.scene-title {
+  padding: 14px 18px; font-size: 1rem; font-weight: 600;
+  background: var(--accent-light); border-bottom: 1px solid var(--border);
+}
+.scene-title-kr { font-size: 0.82rem; color: var(--text-muted); font-weight: 400; margin-left: 8px; }
+
+/* ===== Scene Image ===== */
+.scene-img-wrap { text-align: center; padding: 12px; background: var(--bg); }
+.scene-img {
+  width: 100%; height: auto; border-radius: 8px;
+  object-fit: contain;
+}
+
+/* ===== Word List ===== */
+.word-list { padding: 0 18px 12px; }
+.word-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 0; border-bottom: 1px dashed var(--border);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.word-row:last-child { border-bottom: none; }
+.word-en { font-weight: 600; font-size: 0.95rem; }
+.word-num { color: var(--text-muted); font-size: 0.82rem; margin-right: 6px; }
+.word-kr {
+  font-size: 0.88rem; color: var(--text-secondary); text-align: right;
+  transition: opacity 0.2s, filter 0.2s;
+}
+
+/* ===== Speak Button ===== */
+.speak-btn {
+  background: none; border: none; cursor: pointer; padding: 0 0 0 5px;
+  font-size: 0.75rem; opacity: 0.45; vertical-align: middle;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.speak-btn:hover { opacity: 0.9; transform: scale(1.2); }
+.speak-btn.speaking { opacity: 1; animation: pulse 0.8s infinite; }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.25); } }
+.story-speak { font-size: 0.82rem; margin-left: 6px; }
+
+/* ===== Story Section ===== */
+.story-section { padding: 0 18px 16px; }
+.story-divider {
+  height: 2px; background: linear-gradient(90deg, var(--accent), transparent);
+  margin: 8px 0 14px; border-radius: 1px;
+}
+.story-label {
+  font-size: 0.88rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;
+}
+.story-en { font-size: 0.88rem; line-height: 1.65; margin-bottom: 10px; color: var(--text); }
+.story-kr { font-size: 0.82rem; line-height: 1.65; color: var(--text-secondary); }
+.story-en strong, .story-kr strong { color: var(--bold-color); font-weight: 700; }
+
+/* ===== Song & Movie ===== */
+.media-section { padding: 0 18px 18px; }
+.media-block { margin-top: 12px; }
+.media-header {
+  font-size: 0.85rem; font-weight: 700; margin-bottom: 4px;
+}
+.media-header.song { color: var(--song-color); }
+.media-header.movie { color: var(--movie-color); }
+.media-title {
+  font-size: 0.88rem; font-weight: 600; margin-bottom: 3px;
+}
+.apple-music-link {
+  display: inline-flex; align-items: center; vertical-align: middle;
+  color: #fc3c44; text-decoration: none; margin-left: 6px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.apple-music-link:hover { transform: scale(1.15); opacity: 0.85; }
+.apple-music-icon { width: 20px; height: 20px; }
+.imdb-link {
+  display: inline-flex; align-items: center; vertical-align: middle;
+  color: #f5c518; text-decoration: none; margin-left: 8px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.imdb-link:hover { transform: scale(1.15); opacity: 0.85; }
+.imdb-icon { width: 24px; height: 14px; }
+.media-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.55; }
+.movie-conn { color: var(--text-muted); margin-top: 2px; }
+
+/* ===== Footer ===== */
+footer {
+  text-align: center; padding: 24px; color: var(--text-muted);
+  font-size: 0.75rem; border-top: 1px solid var(--border);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 640px) {
+  .header-left h1 { font-size: 1rem; }
+  .cat-header { font-size: 1.15rem; }
+}
+@media (min-width: 1024px) {
+  html { font-size: 18px; }
+  #main { max-width: 1200px; }
+  .scene-img { width: 100%; }
+  .header-left h1 { font-size: 1.3rem; }
+  .scene-title { font-size: 1.12rem; }
+  .cat-header { font-size: 1.6rem; }
+  .word-en { font-size: 1.08rem; }
+  .word-kr { font-size: 1rem; }
+  .story-en { font-size: 1rem; }
+  .story-kr { font-size: 0.95rem; }
+  .media-desc { font-size: 0.92rem; }
+  .media-title { font-size: 1rem; }
+}
+.btn-home {
+  background: rgba(255,255,255,0.12); border: none; color: #fff;
+  padding: 4px 12px; border-radius: 6px; cursor: pointer;
+  font-size: 0.85rem; font-weight: 500; text-decoration: none;
+  display: flex; align-items: center; gap: 4px;
+  transition: background 0.2s; margin-right: 8px;
+}
+.btn-home:hover { background: rgba(255,255,255,0.25); }
+
+</style>
+</head>
+<body>
+
+<header id="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <h1>영포자 1등급 만들기 7장</h1>
+      <span class="header-sub">감정과 성격 — 180 words / 28 scenes</span>
+    </div>
+    <div class="header-right">
+      <a href="../" class="btn-home">🏠 홈</a>
+      <button id="theme-toggle" class="btn-icon" title="Dark/Light Mode">🌙</button>
+    </div>
+  </div>
+</header>
+
+<nav id="cat-nav">
+  <div class="cat-tabs-wrap">
+    <button class="cat-tab" data-cat="reactions">🎭 Reactions</button>
+<button class="cat-tab" data-cat="emotions_character_communication">💬 Communication</button>
+<button class="cat-tab" data-cat="negative_emotions">😠 Negative Emotions</button>
+<button class="cat-tab" data-cat="emotions_positive">😊 Positive Emotions</button>
+<button class="cat-tab" data-cat="연관된_단어들">📚 연관된 단어들</button>
+
+  </div>
+</nav>
+
+<main id="main">
+  <div id="content"></div>
+</main>
+
+<footer>
+  <p>Generated by Vocabulary Visuals Pipeline</p>
+</footer>
+
+<script>
+const vocabData = {"categories": [{"id": "reactions", "name": "Reactions", "emoji": "🎭", "groups": [{"scene": "Conflict and Resolution", "scene_kr": "갈등과 해결", "words": [{"en": "accept", "kr": "받아들이다·인정하다"}, {"en": "forgive", "kr": "용서하다"}, {"en": "hurt", "kr": "다치게 하다·아프다·상처"}, {"en": "protest", "kr": "항의"}, {"en": "scream", "kr": "비명을 지르다"}], "prompt": "A colorful educational illustration depicting a playground or classroom scene. One child is crying with a scraped knee, clearly showing they are **HURT**. Another child is raising a hand with a determined expression, ready to **PROTEST** an unfair situation. In the background, an adult is trying to calm a child who is about to **SCREAM** in frustration. Nearby, two children are shaking hands, one showing they **FORGIVE** the other, and the other nodding to **ACCEPT** the apology. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "When my little brother accidentally broke my favorite toy, I felt so **hurt** that I began to **protest** loudly. I even let out a little **scream**! Mom told me I needed to **accept** his apology, and after he promised to help fix it, I decided to **forgive** him.", "story_kr": "내 남동생이 실수로 내가 가장 좋아하는 장난감을 부러뜨렸을 때, 나는 너무 **상처**받아서 크게 **항의**하기 시작했어요. 심지어 작은 **비명**을 지르기도 했죠! 엄마는 내가 그의 사과를 **받아들여야** 한다고 말씀하셨고, 그가 고치는 것을 돕겠다고 약속한 후에 나는 그를 **용서**하기로 결정했어요.", "song_title": "Someone Like You", "song_artist": "Adele", "song_intro": "2011년 발매된 아델의 대표곡으로, 이별 후 느끼는 슬픔과 그리움을 절절하게 담아낸 발라드입니다.", "song_desc": "이 노래는 이별의 **상처**를 **받아들이고** 아파하면서도 상대를 **용서**하려는 복합적인 감정을 담고 있어, 단어들과 깊이 연결됩니다.", "movie_title": "쓰리 빌보드 (Three Billboards Outside Ebbing, Missouri)", "movie_year": 2017, "movie_desc": "딸을 잃은 엄마가 범인을 찾기 위해 세운 광고판으로 인해 마을과 갈등을 겪는 이야기를 그린 드라마입니다.", "movie_connection": "이 영화는 딸을 잃은 엄마의 깊은 **상처**와 분노의 **항의**, 그리고 결국은 현실을 **받아들이고** **용서**의 의미를 찾아가는 과정을 강렬하게 보여줍니다."}, {"scene": "Decisions and Challenges", "scene_kr": "결정과 도전", "words": [{"en": "endure", "kr": "견디다"}, {"en": "forget", "kr": "잊다"}, {"en": "hesitate", "kr": "(확신이 안 서서) 망설이다"}, {"en": "obey", "kr": "따르다·순종하다"}], "prompt": "A vibrant educational illustration showing various situations. A student is standing at a fork in the road, looking unsure and starting to **HESITATE** about which path to take. A person is running a long marathon, showing a determined expression as they **ENDURE** the physical challenge. A dog is sitting patiently by its owner's side, having been trained to **OBEY** a command. Another person is scratching their head, looking puzzled and trying hard to remember something they **FORGET**. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Little robot Sparky had to **obey** its creator's every command, no matter how silly. It would often **endure** long hours of polishing dusty shelves without complaint. Sometimes, Sparky would **hesitate** for a moment when asked to dance, but it would never **forget** its primary programming: to bring joy.", "story_kr": "작은 로봇 스파키는 아무리 우스꽝스러워도 창조주의 모든 명령에 **따라야** 했습니다. 먼지 쌓인 선반을 닦는 긴 시간을 불평 없이 **견디곤** 했죠. 가끔 스파키는 춤을 추라는 요청에 잠시 **망설였지만**, 주된 프로그램인 기쁨을 주는 것을 절대 **잊지** 않았습니다.", "song_title": "Eye of the Tiger", "song_artist": "Survivor", "song_intro": "1982년에 발표된 록 음악으로, 영화 '록키 3'의 주제곡으로 유명하며 포기하지 않는 투지를 노래합니다.", "song_desc": "이 노래는 어려운 상황을 **견디고** 목표를 **잊지** 않으며, 망설임 없이 나아가야 한다는 메시지를 담고 있어 단어들과 잘 어울립니다.", "movie_title": "Mulan", "movie_year": 1998, "movie_desc": "1998년 디즈니에서 제작한 애니메이션 영화로, 아버지를 대신해 남장을 하고 전쟁에 나서는 용감한 소녀 뮬란의 이야기입니다.", "movie_connection": "뮬란은 가족을 위해 위험한 임무를 **따르고**, 힘든 훈련을 **견디며**, 자신의 정체성에 대해 **망설이기도** 하지만, 조국을 지키겠다는 목표를 **잊지** 않는 과정을 보여줍니다."}, {"scene": "Joy, Awe, and Admiration", "scene_kr": "기쁨, 경외감, 감탄", "words": [{"en": "impress", "kr": "감명[깊은 인상]을 주다"}, {"en": "laugh", "kr": "웃다·웃음"}, {"en": "surprise", "kr": "놀라게 하다·놀람"}, {"en": "wonder", "kr": "궁금해하다·놀라다·경탄·경이"}], "prompt": "A cheerful educational illustration depicting a lively scene at a birthday party or talent show. A group of friends are gathered, all starting to **LAUGH** heartily at a funny joke. One person is opening a brightly wrapped gift with wide eyes and an open mouth, clearly showing **SURPRISE**. In another part of the scene, a child is looking up at a beautiful night sky filled with twinkling stars, gazing in **WONDER**. On a small stage, an artist is bowing to enthusiastic applause, having managed to **IMPRESS** the audience with their performance. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "The magician's first trick was so amazing, it really **impress**ed everyone. Then, he made a rabbit appear from a hat, which made all the kids **laugh** loudly. His next trick, making his assistant disappear, was a total **surprise**! We all began to **wonder** how he did it.", "story_kr": "마술사의 첫 번째 마술은 너무나 놀라워서 모두에게 정말 **깊은 인상**을 주었다. 그러고 나서 그는 모자에서 토끼를 나타나게 했고, 모든 아이들이 크게 **웃었다**. 다음 마술, 조수를 사라지게 한 것은 완전한 **놀람**이었다! 우리는 모두 그가 어떻게 했는지 **궁금해하기** 시작했다.", "song_title": "A Whole New World", "song_artist": "Brad Kane & Lea Salonga", "song_intro": "1992년 디즈니 애니메이션 '알라딘'의 OST 곡으로, 알라딘과 자스민 공주가 마법 양탄자를 타고 새로운 세상을 탐험하며 부르는 로맨틱한 듀엣곡입니다.", "song_desc": "이 노래는 미지의 세계를 탐험하며 느끼는 **경이**와 **놀람**, 그리고 서로에게 **깊은 인상**을 주는 순간의 기쁨을 담고 있어, 듣는 이에게 **웃음** 짓게 하는 아름다운 곡입니다.", "movie_title": "The Greatest Showman", "movie_year": 2017, "movie_desc": "P.T. 바넘의 실화를 바탕으로 한 뮤지컬 영화로, 특별한 사람들을 모아 세상에서 가장 위대한 쇼를 만들어내는 과정을 그립니다.", "movie_connection": "이 영화는 기상천외한 쇼로 관객들에게 **깊은 인상**을 주고 **놀람**을 선사하며, **웃음**과 **경이**를 동시에 느끼게 하는 완벽한 작품입니다."}]}, {"id": "emotions_character_communication", "name": "Communication", "emoji": "💬", "groups": [{"scene": "Revealing the Truth", "scene_kr": "진실을 드러내기", "words": [{"en": "admit", "kr": "인정하다·시인하다"}, {"en": "frankly", "kr": "솔직히"}, {"en": "lie", "kr": "(누워) 있다·거짓말(하다)"}, {"en": "express", "kr": "표현하다·표현"}], "prompt": "A colorful educational illustration depicting a scene focused on truth and disclosure. In the center, a child with a slightly guilty but relieved expression is about to ADMIT to breaking a small vase, with pieces scattered nearby. Next to them, an adult stands with open hands and a sincere face, speaking FRANKLY. In the background, another character subtly tells a LIE, perhaps with crossed fingers behind their back, looking a bit shifty. Nearby, a person clearly EXPRESSES their feelings with a thought bubble showing a happy face and a heart, indicating open communication. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Oh no, I broke Mom's favorite vase! thought Tom. He wanted to **lie** about it, but he knew that wasn't right. **Frankly**, he was scared, but he decided to **admit** his mistake. \"Mom,\" he began, \"I need to **express** how sorry I am.\"", "story_kr": "\"아이고, 내가 엄마가 가장 아끼는 꽃병을 깼어!\" 톰은 생각했다. 그는 그것에 대해 **거짓말**하고 싶었지만, 그게 옳지 않다는 것을 알았다. **솔직히**, 그는 무서웠지만, 자신의 실수를 **인정하기로** 결심했다. \"엄마,\" 그가 말을 시작했다, \"제가 얼마나 죄송한지 **표현해야** 해요.\"", "song_title": "Honesty", "song_artist": "Billy Joel", "song_intro": "1978년에 발표된 빌리 조엘의 대표곡 중 하나로, 세상에 진실한 것을 찾기 어렵다는 메시지를 담은 발라드입니다.", "song_desc": "이 노래는 **솔직히** 말하고 **거짓말**하지 않는 것의 중요성을 강조하며, 자신의 감정을 **표현하고** 잘못을 **인정하는** 태도와 깊이 연결됩니다.", "movie_title": "Liar Liar", "movie_year": 1997, "movie_desc": "짐 캐리 주연의 코미디 영화로, 거짓말을 할 수 없게 된 변호사의 좌충우돌 이야기를 그립니다.", "movie_connection": "주인공이 하루 동안 **거짓말**을 할 수 없게 되면서 **솔직히** 모든 것을 **표현하고** 자신의 잘못을 **인정해야** 하는 상황들이 단어들과 유쾌하게 연결됩니다."}, {"scene": "Seeking Understanding and Forgiveness", "scene_kr": "이해와 용서를 구하기", "words": [{"en": "appeal", "kr": "호소하다·간청하다"}, {"en": "excuse", "kr": "용서하다·변명(하다)"}, {"en": "pardon", "kr": "용서하다·뭐라고요?"}, {"en": "please", "kr": "제발·기쁘게 하다"}], "prompt": "A colorful educational illustration depicting various acts of seeking understanding and politeness. On one side, a person with an earnest expression is making an APPEAL to a sympathetic listener, perhaps holding out their hands in supplication. In the middle, someone is offering an EXCUSE for being late, pointing to a broken clock, while another person gestures understandingly. Nearby, a character looks confused and says \"PARDON?\" with a question mark above their head, while another character is being granted a PARDON with a gentle nod. A small child politely says \"PLEASE\" while reaching for a cookie, illustrating a polite request. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "My little brother looked at me with puppy eyes. \"Big sister, **please** let me play with your new robot toy!\" he said, trying to **appeal** to my generosity. I sighed, \"What's your **excuse** for breaking my last one?\" He just looked confused. \"**Pardon** me? I didn't mean to!\"", "story_kr": "어린 남동생이 강아지 같은 눈으로 나를 쳐다봤어요. \"누나, **제발** 누나의 새 로봇 장난감 가지고 놀게 해 줘!\" 그는 나의 너그러움에 **호소**하려고 했죠. 나는 한숨을 쉬며 말했어요. \"지난번 내 장난감을 부순 것에 대한 **변명**은 뭔데?\" 그는 그저 혼란스러운 표정을 지었어요. \"**뭐라고요**? 그러려고 한 게 아니었어!\"", "song_title": "Apologize", "song_artist": "OneRepublic", "song_intro": "2007년에 발매된 팝 록 발라드로, 헤어진 연인에게 용서를 구하며 후회하는 마음을 담은 곡입니다.", "song_desc": "이 노래는 상대방에게 용서를 **간청**하고(**appeal**), 자신의 행동에 대한 **변명**을 넘어서는 진심 어린 사과를 담고 있어, **용서하다**(**excuse**, **pardon**)와 **제발**(**please**)이라는 단어들과 깊이 연결됩니다.", "movie_title": "The Green Mile", "movie_year": 1999, "movie_desc": "스티븐 킹의 소설을 원작으로 한 영화로, 사형수 존 코피와 그를 지키려는 교도관들의 이야기를 다룬 감동적인 드라마입니다.", "movie_connection": "영화 속 인물들은 자신의 무죄를 **호소**하고(**appeal**), 타인의 **용서**를 구하며(**excuse**, **pardon**), **제발**(**please**) 살려달라는 간절한 마음을 보여주기에 이 단어들과 잘 어울립니다."}, {"scene": "Reactions and Interactions", "scene_kr": "반응과 상호작용", "words": [{"en": "ignore", "kr": "무시하다"}, {"en": "joke", "kr": "농담·농담하다"}, {"en": "remind", "kr": "상기시키다"}, {"en": "scold", "kr": "꾸짖다"}, {"en": "yell", "kr": "외치다·소리치다"}], "prompt": "A colorful educational illustration showing various forms of interaction and reaction. In one corner, a person is being IGNORED, looking sad as others turn their backs. In the center, two friends are sharing a JOKE, laughing heartily with speech bubbles showing \"Haha!\" and a smiling face. Nearby, a helpful character points to a calendar, trying to REMIND another person about an upcoming event. On the other side, an adult with a firm expression is about to SCOLD a child who looks a bit sheepish. In the background, someone is seen with an open mouth and raised hands, about to YELL in frustration or anger. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Minjun loved to tell a **joke** in class, but sometimes his timing was bad. His teacher would **remind** him to focus, but he often chose to **ignore** her. One day, when he made a funny sound during a test, the teacher had to **yell** his name. She didn't just **scold** him; she made him stay after class to clean the board.", "story_kr": "민준이는 수업 시간에 **농담**하는 것을 좋아했지만, 가끔 타이밍이 안 좋았어요. 선생님은 그에게 집중하라고 **상기시켰지만**, 그는 종종 선생님을 **무시**했어요. 어느 날, 시험 중에 웃긴 소리를 내자, 선생님은 그의 이름을 **외쳐야** 했어요. 선생님은 그를 단순히 **꾸짖는** 것을 넘어, 방과 후에 칠판을 닦게 했답니다.", "song_title": "Sorry", "song_artist": "Justin Bieber", "song_intro": "2015년에 발매된 팝 댄스 곡으로, 후회와 사과의 메시지를 담고 있으며 전 세계적으로 큰 인기를 얻었습니다.", "song_desc": "이 노래는 누군가를 **무시**하거나 **꾸짖는** 등의 행동으로 인해 발생한 갈등에 대해 사과하는 내용이 많아 단어들과 잘 연결됩니다.", "movie_title": "Ferris Bueller's Day Off", "movie_year": 1986, "movie_desc": "고등학생 페리스가 꾀병을 부리고 친구들과 함께 학교를 빼먹고 시카고를 누비는 유쾌한 코미디 영화입니다.", "movie_connection": "주인공 페리스는 학교 규칙을 **무시**하고 선생님의 **꾸짖음**을 **농담**으로 받아치며, 그를 잡으려는 교장 선생님은 계속 **외치고** 다른 사람들은 그에게 현실을 **상기시키려** 합니다."}]}, {"id": "negative_emotions", "name": "Negative Emotions", "emoji": "😠", "groups": [{"scene": "Fear & Anxiety", "scene_kr": "두려움과 불안", "words": [{"en": "afraid", "kr": "두려워하는·걱정하는"}, {"en": "anxious", "kr": "걱정하는·염려하는"}, {"en": "fear", "kr": "두려움·두려워하다"}, {"en": "frighten", "kr": "무섭게 하다·겁주다"}, {"en": "nervous", "kr": "초조한·신경의"}, {"en": "panic", "kr": "극심한 공포·공황"}, {"en": "horror", "kr": "공포(감)·경악"}, {"en": "worry", "kr": "걱정시키다·걱정하다·걱정"}], "prompt": "A child looking AFRAID of a shadow monster, clutching a blanket. A student with a furrowed brow, looking ANXIOUS before an exam. A dark, shadowy figure representing FEAR looming in the background. A loud noise causing a bird to FRIGHTEN and fly away. A person biting their nails, clearly NERVOUS. A crowd running in PANIC from a sudden event. A character with wide eyes expressing HORROR at a scary sight. A person with a thought bubble full of question marks, showing deep WORRY. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Lily was **nervous** about her big presentation, feeling **anxious** about forgetting her lines. She was even **afraid** of the audience's reaction, a deep **fear** building inside her. Suddenly, a strange noise from the hallway made her **panic**, as if something was trying to **frighten** her. The sheer **horror** of the moment made her **worry** she might never finish.", "story_kr": "Lily는 큰 발표 때문에 **초조한** 상태였고, 대사를 잊을까 봐 **염려하는** 마음이 들었다. 그녀는 심지어 청중의 반응이 **두려웠고**, 깊은 **두려움**이 밀려왔다. 갑자기 복도에서 나는 이상한 소리가 그녀를 **극심한 공포**에 빠뜨렸고, 마치 무언가가 그녀를 **무섭게 하려는** 것 같았다. 그 순간의 엄청난 **공포감**은 그녀가 발표를 끝내지 못할까 봐 **걱정**하게 만들었다.", "song_title": "Brave", "song_artist": "Sara Bareilles", "song_intro": "2013년에 발표된 이 곡은 자신의 목소리를 내고 용기를 가지라는 메시지를 담은 팝 발라드입니다.", "song_desc": "이 노래는 두려움과 걱정 때문에 주저하는 마음을 극복하고 용기를 내는 것에 대한 이야기로, `afraid`, `anxious`, `fear`, `worry`, `nervous` 등의 감정과 깊이 연결됩니다.", "movie_title": "A Quiet Place", "movie_year": 2018, "movie_desc": "소리를 내면 괴생명체에게 공격당하는 세상에서 살아남기 위해 노력하는 한 가족의 이야기를 그린 공포 스릴러 영화입니다.", "movie_connection": "이 영화는 소리를 내는 것에 대한 끊임없는 **두려움**과 **염려**, 그리고 예상치 못한 순간에 찾아오는 **극심한 공포**와 **경악**을 통해 `fear`, `anxious`, `panic`, `horror` 등 모든 공포 관련 단어들을 생생하게 보여줍니다."}, {"scene": "Anger & Irritation", "scene_kr": "화와 짜증", "words": [{"en": "anger", "kr": "화"}, {"en": "angry", "kr": "화난·성난"}, {"en": "annoy", "kr": "화[짜증]나게 하다"}, {"en": "furious", "kr": "몹시 화가 난·맹렬한"}, {"en": "bother", "kr": "괴롭히다·신경 쓰다"}, {"en": "crazy", "kr": "미친·열광적인·화난"}, {"en": "violent", "kr": "폭력적인"}, {"en": "harsh", "kr": "가혹한[혹독한]"}], "prompt": "A character with red face and steam coming from ears, embodying ANGER. A person with a scowl and clenched fists, looking ANGRY. A buzzing fly trying to ANNOY someone trying to read. A person with an intensely red face and shouting, depicting being FURIOUS. A small, persistent mosquito trying to BOTHER a sleeping person. A character with wild hair and eyes, acting CRAZY in a frustrated way. A broken object and a stomping foot, hinting at a VIOLENT outburst. A strict teacher with a stern expression and pointing finger, representing a HARSH tone. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "When my little brother kept tapping his foot, I felt a familiar **anger** start to build up inside. It really began to **annoy** me, and soon I was so **angry** that I felt almost **furious**. I know it sounds **crazy**, but his **harsh** words and constant noise would always **bother** me, though I'd never be **violent** in response.", "story_kr": "동생이 계속 발을 두드리자, 익숙한 **화**가 내 안에 쌓이기 시작했다. 그 행동은 정말 나를 **짜증 나게** 했고, 곧 나는 너무 **화가 나서** 거의 **몹시 화가 난** 지경이었다. 좀 **미친** 소리처럼 들리겠지만, 그의 **가혹한** 말과 끊임없는 소음은 항상 나를 **괴롭혔지만**, 나는 결코 **폭력적**으로 반응하지 않았다.", "song_title": "Rolling in the Deep", "song_artist": "Adele", "song_intro": "2010년 발매된 아델의 히트곡으로, 배신감과 분노를 폭발적인 가창력으로 표현한 소울 팝 발라드입니다.", "song_desc": "이 노래는 배신당한 후 느끼는 **화**, **분노**, 그리고 **몹시 화가 난** 감정을 **가혹하게** 쏟아내는 가사로, 오늘 배운 단어들과 깊이 연결됩니다.", "movie_title": "Inside Out", "movie_year": 2015, "movie_desc": "11살 소녀 라일리의 머릿속 감정 컨트롤 본부에서 벌어지는 이야기를 다룬 픽사 애니메이션 영화입니다.", "movie_connection": "이 영화는 '기쁨', '슬픔', '**화**' 등 다양한 감정들이 어떻게 우리의 생각과 행동에 영향을 미치는지 보여주며, 특히 **화난** 감정을 다루는 과정이 인상적입니다."}, {"scene": "Sadness & Disappointment", "scene_kr": "슬픔과 실망", "words": [{"en": "sad", "kr": "슬픈"}, {"en": "depress", "kr": "우울하게 하다"}, {"en": "disappoint", "kr": "실망시키다"}, {"en": "lonely", "kr": "외로운"}, {"en": "alone", "kr": "혼자·외로운·혼자서"}, {"en": "regret", "kr": "후회·유감"}, {"en": "pity", "kr": "유감·안된 일·동정"}, {"en": "suffer", "kr": "고통을 겪다"}], "prompt": "A child with tears in their eyes, looking SAD. A grey cloud hanging over a person, symbolizing DEPRESSion. A person dropping their head after seeing a bad test score, showing DISAPPOINTment. A single figure sitting on a park bench by themselves, looking LONELY. A solitary figure standing in an empty room, feeling ALONE. A person looking back at a broken vase with a thought bubble of 'if only', expressing REGRET. A small, sad puppy looking up at a person, evoking PITY. A person holding a bandaged arm, wincing in pain, depicting to SUFFER. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "After I accidentally dyed my hair green for the school play, I felt so **sad** that I wanted to **depress** everyone with my look. I knew I would **disappoint** my drama teacher, so I went home feeling **lonely** and wanted to be **alone**. I began to **regret** my DIY hair dye experiment, feeling **pity** for myself and thinking about how I would **suffer** through tomorrow's rehearsal.", "story_kr": "학교 연극을 위해 실수로 머리를 초록색으로 염색한 후, 나는 너무 **슬픈** 나머지 내 모습으로 모두를 **우울하게 하고** 싶었다. 연극 선생님을 **실망시킬** 것이 분명했기에, 나는 **외로운** 마음으로 집에 가서 **혼자** 있고 싶었다. 내 DIY 염색 실험을 **후회하기** 시작했고, 나 자신에게 **동정심**을 느끼며 내일 리허설을 어떻게 **고통을 겪을지** 생각했다.", "song_title": "Someone Like You", "song_artist": "Adele", "song_intro": "2011년 발매된 아델의 대표곡으로, 헤어진 연인을 그리워하며 느끼는 슬픔과 후회를 담은 발라드입니다.", "song_desc": "이 노래는 이별 후의 **슬픈** 감정, **외로운** 마음, 그리고 과거를 **후회하는** 감정 등 주어진 단어들의 핵심적인 정서를 잘 표현합니다.", "movie_title": "Cast Away", "movie_year": 2000, "movie_desc": "무인도에 홀로 표류하게 된 남자의 생존기를 그린 영화로, 극한의 외로움과 고통을 다룹니다.", "movie_connection": "주인공이 무인도에서 **혼자** **외로운** 시간을 보내며 **고통을 겪는** 모습은 주어진 단어들의 감정을 극적으로 보여줍니다."}, {"scene": "Shame & Awkwardness", "scene_kr": "부끄러움과 어색함", "words": [{"en": "ashamed", "kr": "부끄러워하는"}, {"en": "embarrass", "kr": "당황하게 하다"}, {"en": "awkward", "kr": "어색한"}, {"en": "guilty", "kr": "죄책감을 느끼는·유죄의"}, {"en": "shame", "kr": "부끄러움·수치·유감"}, {"en": "foolish", "kr": "어리석은"}], "prompt": "A person covering their face with hands, feeling ASHAMED after a mistake. A character tripping and spilling drinks in front of others, causing EMBARRASSment. Two people standing far apart, avoiding eye contact, creating an AWKWARD silence. A person looking down with a shadow over their face, holding a broken cookie jar, feeling GUILTY. A character blushing deeply and looking down, representing SHAME. A person wearing mismatched socks and a hat backwards, making a FOOLISH mistake. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "During my presentation, I tripped over my own feet and spilled juice all over the teacher! I felt so **ashamed** and the silence in the room made everything incredibly **awkward**.", "story_kr": "발표 중에 내 발에 걸려 넘어지면서 선생님께 주스를 다 쏟아버렸다! 나는 너무 **부끄러워하는** 마음이 들었고, 교실의 침묵이 모든 것을 정말 **어색하게** 만들었다.", "song_title": "Creep", "song_artist": "Radiohead", "song_intro": "1992년에 발표된 라디오헤드의 대표곡으로, 자신을 'creep'이자 'weirdo'라고 느끼며 사랑하는 사람에게 다가가지 못하는 자괴감과 소외감을 노래합니다.", "song_desc": "이 노래는 자신을 **어색한** 존재로 여기고, 사랑하는 사람 앞에서 **부끄러워하는** 마음과 **어리석은** 자신을 한탄하는 감정을 잘 표현하여 이 단어들과 깊이 연결됩니다.", "movie_title": "Atonement", "movie_year": 2007, "movie_desc": "이 영화는 어린 소녀의 오해와 거짓 증언으로 인해 비극적인 사건이 벌어지고, 그로 인한 평생의 속죄를 다룬 로맨틱 드라마입니다.", "movie_connection": "어린 브라이오니의 **어리석은** 실수가 엄청난 **죄책감**과 **부끄러움**으로 이어지는 과정을 보여주며, 등장인물들이 겪는 **어색한** 상황과 **당황하게** 되는 순간들이 이 단어들과 잘 맞닿아 있습니다."}, {"scene": "Disgust & Aversion", "scene_kr": "혐오와 싫어함", "words": [{"en": "dislike", "kr": "싫어하다·싫어함"}, {"en": "disgusting", "kr": "역겨운·메스꺼운"}, {"en": "hate", "kr": "몹시 싫어하다"}, {"en": "awful", "kr": "끔찍한·지독한"}, {"en": "cruel", "kr": "잔인한"}, {"en": "evil", "kr": "악한·악"}], "prompt": "A person making a face of DISLIKE while looking at a plate of broccoli. A plate of moldy food with flies buzzing around, looking DISGUSTING. A character with a strong 'X' over their eyes, showing intense HATE for something. A broken, dilapidated house with storm clouds, looking AWFUL. A bully pulling a smaller child's hair, demonstrating CRUEL behavior. A shadowy figure with glowing red eyes, embodying pure EVIL. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "I really **dislike** Mondays, especially when the school lunch is something **disgusting** like cold fish stew. I **hate** having to eat it, and the smell is truly **awful**. It feels **cruel** to make us finish it, almost like an **evil** plot by the cafeteria staff!", "story_kr": "나는 월요일을 정말 **싫어한다**, 특히 학교 점심이 차가운 생선 스튜처럼 **역겨운** 것일 때는 말이다. 나는 그것을 먹어야 하는 것을 **몹시 싫어하고**, 냄새는 정말 **끔찍하다**. 우리가 그것을 다 먹게 하는 것은 **잔인하게** 느껴지고, 마치 급식실 직원들의 **악한** 음모 같았다!", "song_title": "Bad Guy", "song_artist": "Billie Eilish", "song_intro": "빌리 아일리시의 2019년 히트곡으로, 어둡고 독특한 분위기 속에서 자신을 '나쁜 남자'라고 묘사하는 도발적인 가사가 특징인 팝 음악입니다.", "song_desc": "이 노래는 자신을 '나쁜 남자'라고 칭하며 상대방에게 강렬한 인상을 주려는 내용을 담고 있어, **dislike**, **hate**, **evil** 등 부정적이고 강렬한 감정의 단어들과 잘 연결됩니다.", "movie_title": "The Dark Knight", "movie_year": 2008, "movie_desc": "크리스토퍼 놀란 감독의 배트맨 시리즈 중 하나로, 고담시를 혼돈에 빠뜨리는 악당 조커와 배트맨의 대결을 그린 액션 블록버스터입니다.", "movie_connection": "이 영화는 조커라는 **악한** 인물이 보여주는 **잔인한** 행동과 **끔찍한** 혼돈을 통해, **dislike**, **hate**, **disgusting** 등 강렬한 부정적 감정들을 효과적으로 보여줍니다."}, {"scene": "Frustration & Futility", "scene_kr": "좌절과 헛됨", "words": [{"en": "frustrate", "kr": "좌절시키다"}, {"en": "lose", "kr": "잃다·지다"}, {"en": "vain", "kr": "헛된·소용없는"}, {"en": "dull", "kr": "지루한·둔한"}, {"en": "boring", "kr": "지루한"}, {"en": "unfortunately", "kr": "불행히도"}], "prompt": "A person with hands thrown up in the air next to a tangled knot, feeling FRUSTRATed. A sports player dropping their head after their team LOSEs the game. A character trying to catch smoke with a net, illustrating a VAIN effort. A grey, monotonous landscape with a yawn, representing something DULL. A person falling asleep while reading a textbook, finding it BORING. A broken umbrella in a sudden downpour, with a thought bubble saying \"UNFORTUNATELY...\", showing bad luck. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "My attempt to learn advanced calculus was so **dull** and **boring** that it started to **frustrate** me. I felt like my efforts were in **vain** because I would always **lose** track of the complex formulas. **Unfortunately**, my cat then ate my textbook, ending my struggle (and my homework).", "story_kr": "고급 미적분을 배우려는 나의 시도는 너무나 **재미없고** **지루해서** 나를 **좌절시켰다**. 복잡한 공식을 항상 **놓쳐서** 나의 노력이 **헛된** 것 같았다. **불행히도**, 그때 우리 고양이가 내 교과서를 먹어버려서 나의 고군분투(그리고 숙제)는 끝났다.", "song_title": "Losing My Religion", "song_artist": "R.E.M.", "song_intro": "1991년에 발매된 얼터너티브 록 곡으로, 사랑과 소통의 어려움 속에서 좌절감을 표현하는 노래입니다.", "song_desc": "이 노래는 관계 속에서 길을 **잃고**, **헛된** 노력에 **좌절하며** 느끼는 **지루하고** **불행한** 감정들을 잘 나타냅니다.", "movie_title": "Groundhog Day", "movie_year": 1993, "movie_desc": "필 코너스라는 기상 캐스터가 같은 하루를 반복해서 살게 되는 기묘하고 유쾌한 코미디 영화입니다.", "movie_connection": "주인공이 매일 반복되는 **지루하고** **재미없는** 일상에 **좌절하고**, 탈출하려는 노력이 **헛되이** **실패하며** **불행히도** 갇히게 되는 상황이 이 단어들과 완벽하게 연결됩니다."}, {"scene": "Internal Struggles & Discomforts", "scene_kr": "내면의 갈등과 불편함", "words": [{"en": "concern", "kr": "걱정·관심사·관련되다"}, {"en": "doubt", "kr": "의심(하다)·의문이다"}, {"en": "greedy", "kr": "탐욕스러운"}, {"en": "envy", "kr": "부러워하다·부러움"}, {"en": "hunger", "kr": "굶주림[배고픔]"}, {"en": "pressure", "kr": "압력"}, {"en": "shock", "kr": "충격"}, {"en": "upset", "kr": "속상한·당황한·속상하게 하다"}], "prompt": "A person looking at a sick friend with a look of CONCERN. A character with a question mark over their head, expressing DOUBT about a decision. A character with dollar signs in their eyes, reaching for more than they need, showing GREEDYness. A person looking longingly at someone else's new toy, feeling ENVY. A rumbling stomach icon next to a person, indicating HUNGER. A heavy weight pressing down on a person's shoulders, symbolizing PRESSURE. A character with wide eyes and mouth agape, reacting with SHOCK to unexpected news. A person with crossed arms and a frown, looking UPSET. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Lily felt a lot of **pressure** to win the baking contest, especially with her rival, Tom, always showing off. She couldn't help but **envy** his perfect cakes. Her biggest **concern** was that her own cake wouldn't rise. When Tom, known for being **greedy** with ingredients, secretly added extra sugar to his dough, a sudden **shock** went through the room. Everyone began to **doubt** his honesty, and Lily felt so **upset** that she almost lost her **hunger** for baking.", "story_kr": "릴리는 라이벌 톰이 항상 뽐내는 모습 때문에 베이킹 대회에서 이겨야 한다는 큰 **압력**을 느꼈다. 그녀는 그의 완벽한 케이크를 **부러워하지** 않을 수 없었다. 그녀의 가장 큰 **걱정**은 자기 케이크가 부풀지 않을까 하는 것이었다. 재료에 **탐욕스러운** 것으로 알려진 톰이 몰래 반죽에 설탕을 더 넣었을 때, 방 안에는 갑작스러운 **충격**이 퍼졌다. 모두가 그의 정직함을 **의심하기** 시작했고, 릴리는 너무 **속상한** 나머지 베이킹에 대한 **갈망**을 거의 잃을 뻔했다.", "song_title": "Eye of the Tiger", "song_artist": "Survivor", "song_intro": "1982년 영화 '록키 3'의 주제가로 유명해진 록 음악으로, 역경을 이겨내고 승리를 향한 투지를 불태우는 내용을 담고 있습니다.", "song_desc": "이 노래는 성공에 대한 **갈망(hunger)**, 경쟁에서 오는 **압력(pressure)**, 그리고 자신에 대한 **의심(doubt)**을 극복하는 과정을 강렬하게 표현하여 단어들과 잘 연결됩니다.", "movie_title": "The Social Network", "movie_year": 2010, "movie_desc": "페이스북의 탄생 비화를 다룬 영화로, 젊은 창업자들의 야망과 우정, 그리고 갈등을 그립니다.", "movie_connection": "이 영화는 성공을 향한 **탐욕(greedy)**과 **갈망(hunger)**, 친구 사이의 **부러움(envy)**, 그리고 법적 **압력(pressure)** 속에서 겪는 **의심(doubt)**과 **속상함(upset)** 등 다양한 감정들을 깊이 있게 다룹니다."}]}, {"id": "emotions_positive", "name": "Positive Emotions", "emoji": "😊", "groups": [{"scene": "Celebration & Triumph", "scene_kr": "축하와 승리", "words": [{"en": "celebrate", "kr": "축하[기념]하다"}, {"en": "cheer", "kr": "환호·응원하다·쾌활한"}, {"en": "glory", "kr": "영광"}, {"en": "proud", "kr": "자랑스러운"}, {"en": "happily", "kr": "행복하게·다행히도"}, {"en": "happiness", "kr": "행복"}, {"en": "merry", "kr": "즐거운·명랑한"}, {"en": "welcome", "kr": "환영·환영하다·환영받는"}], "prompt": "A vibrant scene of a community CELEBRATING a victory, with people raising their hands in CHEER, a shining trophy symbolizing GLORY, and a parent looking PROUDly at their child's achievement. Everyone is smiling HAPPILY, radiating HAPPINESS, and the atmosphere is MERRY. A group of friends warmly WELCOME a new member. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Our school's soccer team won the championship! The crowd began to **cheer** loudly, feeling the **glory** of victory. We were so **proud** of our team, and everyone wanted to **celebrate**. The whole town gave them a big **welcome** parade, and we all sang **merry** songs. Everyone danced **happily**, sharing the pure **happiness** of the moment.", "story_kr": "우리 학교 축구팀이 챔피언십에서 우승했어요! 관중들은 승리의 **영광**을 느끼며 크게 **환호**하기 시작했어요. 우리는 우리 팀이 정말 **자랑스러웠고**, 모두가 **축하**하고 싶어 했죠. 온 마을 사람들이 그들을 성대하게 **환영**하는 퍼레이드를 열었고, 우리는 모두 **즐거운** 노래를 불렀어요. 모두가 **행복하게** 춤을 추며 순수한 **행복**을 함께 나누었답니다.", "song_title": "We Are The Champions", "song_artist": "Queen", "song_intro": "1977년에 발표된 퀸의 대표곡으로, 승리와 챔피언의 영광을 노래하며 전 세계인에게 사랑받는 록 발라드입니다.", "song_desc": "이 노래는 승리를 **축하**하고 **자랑스러운** 순간의 **행복**을 **환호**하며 **즐겁게** 나누는 모든 단어와 완벽하게 어울립니다.", "movie_title": "Cool Runnings", "movie_year": 1993, "movie_desc": "자메이카 봅슬레이 팀의 실화를 바탕으로 한 유쾌한 영화로, 역경을 딛고 올림픽에 도전하는 그들의 감동적인 여정을 그립니다.", "movie_connection": "팀이 예상치 못한 성공을 거두며 **영광**을 얻고, 서로를 **자랑스러워하며** **행복하게** **축하**하는 모습이 이 단어들과 잘 연결됩니다."}, {"scene": "Admiration & Delight", "scene_kr": "감탄과 기쁨", "words": [{"en": "admire", "kr": "존경하다·감탄하다"}, {"en": "amazing", "kr": "놀라운"}, {"en": "fantastic", "kr": "환상적인"}, {"en": "terrific", "kr": "멋진·훌륭한·엄청난"}, {"en": "charming", "kr": "매력적인"}, {"en": "lovely", "kr": "사랑스러운·아름다운·즐거운"}, {"en": "delight", "kr": "기쁨·기쁘게 하다"}], "prompt": "A person looking up with ADMIRATION at an AMAZING fireworks display over a city skyline, which is truly FANTASTIC and TERRIFIC. Nearby, a CHARMING little puppy plays with a LOVELY flower, bringing DELIGHT to a child watching. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Yesterday, I saw a **fantastic** street artist whose paintings were truly **amazing**! I couldn't help but **admire** his talent. He had such a **charming** smile, and his **lovely** puppy sat quietly beside him. Watching him paint filled me with pure **delight**, making it a **terrific** day!", "story_kr": "어제 저는 **환상적인** 거리 예술가를 보았는데, 그의 그림들은 정말 **놀라운** 것이었어요! 저는 그의 재능에 **감탄하지** 않을 수 없었죠. 그는 정말 **매력적인** 미소를 가지고 있었고, 그의 **사랑스러운** 강아지는 조용히 옆에 앉아 있었어요. 그가 그림 그리는 것을 보는 것은 저를 순수한 **기쁨**으로 가득 채웠고, **멋진** 하루를 만들어 주었답니다!", "song_title": "What a Wonderful World", "song_artist": "Louis Armstrong", "song_intro": "1967년에 발표된 재즈 명곡으로, 세상의 아름다움과 평화에 대한 감사를 노래합니다.", "song_desc": "이 노래는 세상의 경이로움에 대한 **놀라운** 감탄과 **기쁨**을 표현하며, 모든 것이 **사랑스럽고** **환상적**이라는 메시지를 전달하여 단어들과 잘 어울립니다.", "movie_title": "Amelie (아멜리에)", "movie_year": 2001, "movie_desc": "파리의 몽마르뜨를 배경으로, 소소한 일상 속에서 타인에게 **기쁨**을 주는 아멜리의 **사랑스러운** 이야기를 그린 프랑스 영화입니다.", "movie_connection": "이 영화는 **매력적인** 주인공 아멜리가 세상을 **환상적**이고 **놀라운** 시선으로 바라보며, 작은 것에서 **기쁨**을 찾아가는 모습이 단어들과 깊이 연결됩니다."}, {"scene": "Inner Peace & Comfort", "scene_kr": "내면의 평화와 편안함", "words": [{"en": "calm", "kr": "침착한·평온한·진정하다"}, {"en": "comfortable", "kr": "편(안)한"}, {"en": "mild", "kr": "온화한·순한"}, {"en": "pleasant", "kr": "쾌적한·즐거운·기분 좋은"}, {"en": "refresh", "kr": "생기를 되찾게 하다"}, {"en": "glad", "kr": "기쁜"}], "prompt": "A serene bedroom scene where a child is sleeping CALMly in a COMFORTABLE bed. Sunlight streams through a window, showing a MILD breeze gently swaying curtains. The air feels PLEASANT, and a glass of water on the nightstand suggests a REFRESHing start to the day. The child's peaceful expression makes the viewer GLAD. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Lily woke up feeling **calm** and peaceful. The morning air was **mild**, making her balcony a **comfortable** spot to read. A **pleasant** breeze gently rustled the leaves, and sipping her tea helped to **refresh** her mind. She felt so **glad** to start her day this way!", "story_kr": "릴리는 **평온한** 기분으로 잠에서 깼다. 아침 공기는 **온화해서**, 발코니는 책 읽기에 **편안한** 장소였다. **쾌적한** 산들바람이 나뭇잎을 부드럽게 흔들었고, 차를 마시니 마음이 **생기를 되찾게** 되었다. 그녀는 이렇게 하루를 시작하게 되어 정말 **기뻤다**!", "song_title": "Lovely Day", "song_artist": "Bill Withers", "song_intro": "1977년에 발표된 빌 위더스의 대표곡으로, 기분 좋은 아침을 맞이하며 사랑하는 사람과 함께하는 행복을 노래합니다.", "song_desc": "이 노래는 **평온하고** **쾌적한** 하루의 시작을 묘사하며, 듣는 이에게 **상쾌함**과 **기쁨**을 선사하여 제시된 단어들과 잘 어울립니다.", "movie_title": "이웃집 토토로 (My Neighbor Totoro)", "movie_year": 1988, "movie_desc": "미야자키 하야오 감독의 1988년 애니메이션 영화로, 시골로 이사 온 자매가 숲의 정령 토토로를 만나 겪는 따뜻한 이야기입니다.", "movie_connection": "영화 속 자연의 **온화한** 풍경과 아이들의 **평온한** 일상은 보는 이에게 **쾌적하고** **편안한** 느낌을 주며, **기쁨**을 **새롭게** 느끼게 합니다."}, {"scene": "Kindness & Compassion", "scene_kr": "친절과 연민", "words": [{"en": "care", "kr": "돌봄·관심을 갖다·돌보다"}, {"en": "friendly", "kr": "친절한·친한"}, {"en": "generous", "kr": "인심 좋은[관대한]·아낌없이"}, {"en": "gentle", "kr": "온화한·부드러운"}, {"en": "kind", "kr": "종류·친절한"}, {"en": "kindness", "kr": "친절"}, {"en": "mercy", "kr": "자비"}, {"en": "grateful", "kr": "고마워하는[감사하는]"}], "prompt": "A warm scene where a FRIENDLY doctor shows CARE for a patient. A GENEROUS person offers a GENTLE hand to help an elderly person cross the street, demonstrating KINDNESS. A judge shows MERCY in a courtroom, and a person expresses being GRATEFUL with a thank-you note. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "When a new student, Lily, joined our class, everyone showed great **care** for her. Our teacher, Ms. Kim, was especially **kind** and **gentle**, always speaking with a soft voice. One day, a **friendly** classmate named Tom, known for his **generous** spirit, shared his lunch and even offered to help Lily with her homework, demonstrating true **kindness**. Lily, feeling the **mercy** of their warm welcome, was incredibly **grateful** for her new friends.", "story_kr": "새로운 학생 릴리가 우리 반에 왔을 때, 모두 그녀에게 큰 **관심**을 보였다. 우리 선생님 김 선생님은 특히 **친절하고 온화한** 분이셨고, 항상 부드러운 목소리로 말씀하셨다. 어느 날, **친절한** 급우 톰은 그의 **아낌없이 주는** 마음으로 유명했는데, 릴리에게 점심을 나누어주고 숙제도 도와주겠다고 하며 진정한 **친절함**을 보여주었다. 릴리는 그들의 따뜻한 환영에 대한 **자비**를 느끼며, 새로운 친구들에게 매우 **고마워했다**.", "song_title": "Count on Me", "song_artist": "Bruno Mars", "song_intro": "2010년에 발표된 브루노 마스의 곡으로, 언제든 기댈 수 있는 진정한 친구에 대한 따뜻한 메시지를 담고 있습니다.", "song_desc": "이 노래는 친구를 향한 **친절함**, **관심**, 그리고 서로에게 **고마워하는** 마음 등 이 단어들이 나타내는 따뜻한 우정의 가치를 잘 보여줍니다.", "movie_title": "Paddington", "movie_year": 2014, "movie_desc": "영국 런던으로 온 페루 출신 꼬마 곰 패딩턴이 브라운 가족을 만나 겪는 따뜻하고 유쾌한 모험을 그린 영화입니다.", "movie_connection": "이 영화는 낯선 이에게 베푸는 **친절함**과 **관심**, 그리고 서로를 **자비**롭게 받아들이는 가족의 **온화한** 마음을 아름답게 보여줍니다."}, {"scene": "Trust & Character", "scene_kr": "신뢰와 인격", "words": [{"en": "confidence", "kr": "신뢰·자신(감)"}, {"en": "honesty", "kr": "정직"}, {"en": "sincerely", "kr": "진심으로"}, {"en": "trust", "kr": "신뢰·신임·믿음·믿다"}, {"en": "courage", "kr": "용기"}], "prompt": "A young student standing with CONFIDENCE while giving a presentation, speaking with HONESTY. Two friends shake hands, showing they SINCERELY TRUST each other. A small child shows COURAGE by taking their first step. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "When Lily accidentally broke her friend's favorite pen, she knew she had to show **honesty**. It took **courage** to admit it, but she **sincerely** apologized. Her friend saw her effort and began to **trust** her even more, which gave Lily more **confidence** in herself.", "story_kr": "릴리가 실수로 친구의 가장 좋아하는 펜을 망가뜨렸을 때, 그녀는 **정직**해야 한다는 것을 알았습니다. 그것을 인정하는 데는 **용기**가 필요했지만, 그녀는 **진심으로** 사과했습니다. 친구는 릴리의 노력을 보고 그녀를 더욱 **신뢰**하기 시작했고, 이는 릴리에게 더 큰 **자신감**을 주었습니다.", "song_title": "Roar", "song_artist": "Katy Perry", "song_intro": "2013년 발매된 케이티 페리의 히트곡으로, 내면의 힘을 찾아 용기 있게 목소리를 내는 과정을 표현한 팝송입니다.", "song_desc": "이 노래는 **자신감**과 **용기**를 가지고 어려움을 극복하며, 자기 자신에게 **정직**한 태도를 강조하여 단어들과 잘 연결됩니다.", "movie_title": "Zootopia", "movie_year": 2016, "movie_desc": "다양한 동물들이 함께 살아가는 도시 주토피아에서 토끼 경찰 주디 홉스가 여우 닉 와일드와 함께 미스터리한 사건을 해결하는 애니메이션 영화입니다.", "movie_connection": "주디의 **용기**와 **자신감**, 그리고 주디와 닉이 서로를 **신뢰**하며 **정직**하게 협력하는 모습이 이 단어들과 깊이 연결됩니다."}, {"scene": "Excitement & Amusement", "scene_kr": "흥분과 즐거움", "words": [{"en": "amusement", "kr": "즐거움·재미·오락"}, {"en": "entertain", "kr": "즐겁게 하다"}, {"en": "excite", "kr": "흥분시키다"}, {"en": "thrill", "kr": "황홀감·흥분·설렘"}, {"en": "funny", "kr": "웃기는·재미있는"}, {"en": "Joy", "kr": "기쁨"}, {"en": "pleasure", "kr": "기쁨·즐거움"}], "prompt": "A lively carnival scene filled with AMUSEMENT. A clown tries to ENTERTAIN the crowd with a FUNNY trick, making children EXCITED and feeling a THRILL. Everyone's faces are lit with JOY and pure PLEASURE. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "The school festival was full of **amusement** as the band played, bringing everyone pure **Joy**. Their energetic music would **entertain** the crowd, and the lead singer's **funny** dance moves made us laugh, creating a feeling of great **pleasure**. The sudden fireworks display made everyone **excite**d, giving us a wonderful **thrill**.", "story_kr": "학교 축제는 밴드 공연으로 가득한 **즐거움**이었고, 모두에게 순수한 **기쁨**을 가져다주었습니다. 그들의 활기찬 음악은 관중들을 **즐겁게** 해주었고, 리드 보컬의 **웃기는** 춤 동작은 우리를 웃게 하며 큰 **즐거움**을 선사했습니다. 갑작스러운 불꽃놀이 전시는 모두를 **흥분시켰고**, 멋진 **황홀감**을 주었습니다.", "song_title": "Happy", "song_artist": "Pharrell Williams", "song_intro": "2013년에 발표된 이 팝송은 듣는 사람을 행복하게 만드는 경쾌하고 신나는 분위기로 전 세계적인 사랑을 받았습니다.", "song_desc": "이 노래는 'Joy', 'pleasure' 같은 단어처럼 일상 속에서 느끼는 즐거움과 'excite', 'thrill'처럼 신나는 감정을 잘 표현합니다.", "movie_title": "Inside Out", "movie_year": 2015, "movie_desc": "소녀 라일리의 머릿속 감정 컨트롤 본부에서 벌어지는 기쁨, 슬픔, 버럭, 까칠, 소심 다섯 감정들의 모험을 그린 애니메이션 영화입니다.", "movie_connection": "영화 속 'Joy' 캐릭터처럼 기쁨과 즐거움(pleasure, amusement)을 찾아가는 과정을 보여주며, 흥분과 설렘(excite, thrill)을 느끼게 하는 장면들로 가득합니다."}, {"scene": "Hope & Affection", "scene_kr": "희망과 애정", "words": [{"en": "eager", "kr": "열망하는"}, {"en": "expect", "kr": "기대하다"}, {"en": "interest", "kr": "관심·흥미·이익"}, {"en": "wish", "kr": "바라다·소원·소망"}, {"en": "fond", "kr": "좋아하는"}, {"en": "favorite", "kr": "가장 좋아하는 (것·사람)"}, {"en": "cute", "kr": "귀여운"}, {"en": "fortunately", "kr": "다행스럽게도·운 좋게도"}], "prompt": "A child looking EAGERly out a window, EXPECTing a friend to arrive. A person shows great INTEREST in a book. A birthday cake with candles, ready for someone to make a WISH. A parent looking FONDly at their sleeping baby, who is so CUTE. A four-leaf clover lies on the ground, symbolizing that something FORTUNATELY good has happened. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "My sister was **eager** to get a new puppy, her biggest **wish** was for a small, **cute** one. We went to the shelter, full of **expect**ation, hoping to find her perfect companion. One fluffy puppy immediately caught her **interest**, and she quickly grew **fond** of it, making it her **favorite** from the start. **Fortunately**, we were able to adopt it that day!", "story_kr": "우리 언니는 새 강아지를 키우고 싶어 **열망하는** 마음이었고, 작고 **귀여운** 강아지를 갖는 것이 가장 큰 **소원**이었다. 우리는 완벽한 친구를 찾을 **기대감**에 가득 차 보호소로 갔다. 복슬복슬한 강아지 한 마리가 언니의 **흥미**를 즉시 사로잡았고, 언니는 곧 그 강아지를 **좋아하게** 되었으며, 처음부터 **가장 좋아하는** 강아지로 삼았다. **다행스럽게도**, 우리는 그날 그 강아지를 입양할 수 있었다!", "song_title": "Count On Me", "song_artist": "Bruno Mars", "song_intro": "브루노 마스의 2010년 히트곡으로, 친구와의 깊은 우정과 신뢰를 노래하는 밝고 따뜻한 곡입니다.", "song_desc": "이 노래는 누군가를 **좋아하고** 가장 **좋아하는** 친구로 여기며, 서로에게 좋은 일이 생기기를 **바라는** 마음과 **기대하는** 긍정적인 감정들을 잘 담아냅니다.", "movie_title": "Paddington", "movie_year": 2014, "movie_desc": "페루에서 온 귀여운 곰 패딩턴이 런던에서 브라운 가족을 만나 새로운 보금자리를 찾아가는 따뜻한 이야기입니다.", "movie_connection": "브라운 가족이 **귀여운** 패딩턴에게 **관심**을 보이고 **좋아하게** 되며, 그를 가족의 **가장 좋아하는** 일원으로 받아들이는 과정에 **소원**과 **기대**, 그리고 **다행스럽게도** 행복한 결말이 모두 담겨 있습니다."}]}, {"id": "연관된_단어들", "name": "연관된 단어들", "emoji": "📚", "groups": [{"scene": "The Inner World (Mind & Thought)", "scene_kr": "내면세계 (마음과 사고)", "words": [{"en": "mind", "kr": "마음·정신·언짢아하다·조심하다"}, {"en": "mental", "kr": "정신[마음]의"}, {"en": "conscious", "kr": "의식하는·의식이 있는"}, {"en": "believe", "kr": "믿다"}, {"en": "consider", "kr": "숙고[고려]하다·여기다"}, {"en": "imagine", "kr": "상상하다"}, {"en": "reason", "kr": "이유·이성"}, {"en": "realize", "kr": "깨닫다·실현하다"}], "prompt": "A colorful educational illustration depicting the inner workings of a human mind. A glowing brain icon represents the **MIND**. A thought cloud above a person's head illustrates the **MENTAL** aspect. A person with wide-open, alert eyes signifies being **CONSCIOUS**. Another person holding a heart icon, looking hopeful, shows how we **BELIEVE**. Someone with a finger on their chin, deep in thought, is shown to **CONSIDER**. A whimsical scene emerging from a person's head visualizes how we **IMAGINE**. A lightbulb illuminating a logical path represents **REASON**. An \"Aha!\" speech bubble above someone's head captures the moment they **REALIZE** something. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "My pet cat, Mittens, always seemed to have a secret in her **mind**. One day, I felt a strange **mental** urge to understand her. I wasn't fully **conscious** of why, but I began to **believe** she was trying to tell me something. I started to **consider** her every meow and twitch, trying to **imagine** what she wanted. For some **reason**, I suddenly **realize**d she just wanted more treats!", "story_kr": "내 반려 고양이 미튼즈는 항상 **마음**속에 비밀을 간직한 것 같았다. 어느 날, 나는 고양이를 이해하고 싶은 이상한 **정신적** 충동을 느꼈다. 왜 그런지 완전히 **의식하지** 못했지만, 나는 고양이가 나에게 무언가를 말하려 한다고 **믿기** 시작했다. 나는 고양이의 모든 야옹거림과 움찔거림을 **고려하며**, 고양이가 무엇을 원하는지 **상상하려** 노력했다. 어떤 **이유**에서인지, 나는 갑자기 고양이가 그저 간식을 더 원한다는 것을 **깨달았다**!", "song_title": "Imagine", "song_artist": "John Lennon", "song_intro": "1971년에 발표된 존 레논의 대표곡으로, 평화와 사랑이 가득한 세상을 상상하는 메시지를 담은 명곡입니다.", "song_desc": "이 노래는 더 나은 세상을 **상상하고(imagine)**, 평화를 **믿으며(believe)**, 우리 **마음(mind)**속 깊이 변화를 **깨닫는(realize)** 과정을 아름답게 표현합니다.", "movie_title": "Inception", "movie_year": 2010, "movie_desc": "크리스토퍼 놀란 감독의 SF 액션 스릴러로, 타인의 꿈속으로 들어가 생각을 훔치거나 심는 독특한 이야기를 그립니다.", "movie_connection": "이 영화는 꿈을 **상상하고(imagine)**, 타인의 **마음(mind)**속에 들어가 **의식(conscious)**을 조작하며, 진실을 **깨닫는(realize)** 과정을 깊이 있게 다룹니다."}, {"scene": "Personality & Character Traits", "scene_kr": "성격과 특징", "words": [{"en": "character", "kr": "성격·(등장)인물·글자"}, {"en": "characteristic", "kr": "특징·특유의"}, {"en": "different", "kr": "다른"}, {"en": "attract", "kr": "(마음을) 끌다·매혹하다"}, {"en": "curious", "kr": "호기심이 많은·궁금한"}, {"en": "desire", "kr": "욕구[욕망]·바라다"}, {"en": "spirit", "kr": "정신·영혼·기분·기백"}, {"en": "image", "kr": "이미지·인상·심상"}], "prompt": "A vibrant educational illustration showcasing various aspects of personality. A diverse group of people, each with a distinct silhouette, represents **CHARACTER**. A magnifying glass highlighting unique features on a person illustrates a **CHARACTERISTIC**. A red apple standing out among green apples clearly shows something **DIFFERENT**. Two magnets pulling towards each other visually describe how things **ATTRACT**. A person peeking around a corner with wide eyes embodies being **CURIOUS**. A person reaching for a shimmering star symbolizes **DESIRE**. A person with a vibrant, energetic aura around them depicts their **SPIRIT**. A mirror reflecting a person's perceived self illustrates their **IMAGE**. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "A new student with a truly unique **character** joined our class. Her most striking **characteristic** was her brightly colored hair, which made her look completely **different** from everyone else. This unusual look and mysterious aura immediately began to **attract** everyone's attention, making us all very **curious**. We had a strong **desire** to learn more about her adventurous **spirit** and the cool **image** she projected.", "story_kr": "우리 반에 정말 독특한 **성격**을 가진 새 학생이 전학 왔다. 그녀의 가장 눈에 띄는 **특징**은 다른 모든 학생들과는 완전히 **다른** 밝은색 머리였다. 이런 특이한 모습과 신비로운 분위기는 즉시 모두의 시선을 **끌기** 시작했고, 우리 모두를 매우 **궁금하게** 만들었다. 우리는 그녀의 모험적인 **기백**과 그녀가 풍기는 멋진 **이미지**에 대해 더 알고 싶은 강한 **욕구**를 느꼈다.", "song_title": "Born This Way", "song_artist": "Lady Gaga", "song_intro": "2011년에 발매된 레이디 가가의 히트곡으로, 자신의 모습 그대로를 사랑하자는 메시지를 담은 댄스 팝 곡입니다.", "song_desc": "이 곡은 자신의 **성격**과 **특징**을 사랑하고, 남들과 **다른** 자신만의 **이미지**를 당당히 드러내자는 **기백**을 담아, 타인의 **궁금증**을 **끌어당기는** 메시지를 전달하며, 진정한 자신을 향한 **욕구**를 표현합니다.", "movie_title": "Forrest Gump", "movie_year": 1994, "movie_desc": "지능이 조금 낮지만 순수한 마음을 가진 포레스트 검프가 현대사의 주요 사건들을 겪으며 성장하는 과정을 그린 감동적인 영화입니다.", "movie_connection": "포레스트 검프는 남들과 **다른** 독특한 **성격**과 **특징**을 가진 **인물**로, 그의 삶은 많은 사람들의 **궁금증**을 **끌어당기며**, 순수한 **기백**과 삶에 대한 **욕구**를 통해 강렬한 **이미지**를 남깁니다."}, {"scene": "Emotions & Moods", "scene_kr": "감정과 기분", "words": [{"en": "emotion", "kr": "감정"}, {"en": "mood", "kr": "기분·분위기"}, {"en": "positive", "kr": "긍정적인"}, {"en": "negative", "kr": "부정적인"}, {"en": "humorous", "kr": "유머러스한"}, {"en": "comic", "kr": "희극의·웃기는"}, {"en": "shy", "kr": "수줍어하는"}, {"en": "peace", "kr": "평화"}], "prompt": "A lively educational illustration exploring emotions and moods. A palette of various colored blobs represents different **EMOTION**s. A person with a cloud above their head, changing from sunny to rainy, illustrates their **MOOD**. A thumbs-up icon with a bright smile signifies being **POSITIVE**. A thumbs-down icon with a frown depicts being **NEGATIVE**. A person laughing heartily, with tears of joy, is **HUMOROUS**. A cartoon speech bubble with \"HA HA!\" represents something **COMIC**. A person blushing and hiding behind their hands shows being **SHY**. A dove flying over a calm landscape symbolizes **PEACE**. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Lily, usually quite **shy**, had a **negative** **mood** after a tough test. But then, her friend showed her a **comic** video. The **humorous** animal made her **emotion** turn **positive**, filling her heart with **peace**.", "story_kr": "릴리는 평소에 꽤 **수줍어하는** 편이었지만, 힘든 시험 후 **부정적인** **기분**에 빠져 있었다. 그런데 친구가 **웃기는** 동영상을 보여주었다. 그 **유머러스한** 동물 덕분에 그녀의 **감정**은 **긍정적인** 방향으로 바뀌었고, 마음이 **평화**로 가득 찼다.", "song_title": "Happy", "song_artist": "Pharrell Williams", "song_intro": "2013년 영화 '슈퍼배드 2' OST로 큰 인기를 얻은 곡으로, 듣는 사람을 저절로 행복하게 만드는 경쾌한 팝송입니다.", "song_desc": "이 노래는 **긍정적인** **감정**과 **기분**을 강조하며, **유머러스한** 분위기로 **부정적인** 생각을 없애고 **평화**를 느끼게 해준다는 점에서 단어들과 잘 어울립니다.", "movie_title": "인사이드 아웃 (Inside Out)", "movie_year": 2015, "movie_desc": "사람의 머릿속 감정 컨트롤 본부에서 기쁨, 슬픔, 버럭, 까칠, 소심이라는 다섯 가지 감정들이 주인공 라일리의 행복을 찾아가는 모험을 그린 애니메이션 영화입니다.", "movie_connection": "이 영화는 **긍정적인** **감정**과 **부정적인** **감정**이 공존하며 **기분**과 **감정**에 미치는 영향을 **유머러스하고** **웃기는** 방식으로 보여주고, 주인공이 **수줍어하는** 순간들을 겪으며 결국 **평화**를 찾는 과정을 잘 담아냅니다."}, {"scene": "Virtues & Vices (Good & Bad Traits)", "scene_kr": "미덕과 악덕 (좋고 나쁜 특성)", "words": [{"en": "diligent", "kr": "근면한·성실한·부지런한"}, {"en": "merit", "kr": "장점·가치"}, {"en": "clever", "kr": "영리한·똑똑한"}, {"en": "logical", "kr": "논리적인"}, {"en": "idle", "kr": "게으른·나태한"}, {"en": "lazy", "kr": "게으른"}, {"en": "selfish", "kr": "이기적인"}, {"en": "strict", "kr": "엄한·엄격한"}], "prompt": "An engaging educational illustration contrasting virtues and vices. A person diligently working at a desk with a stack of books represents being **DILIGENT**. A shining gold medal or a star symbolizes **MERIT**. A person solving a puzzle with a triumphant expression shows they are **CLEVER**. A flowchart or a clear path from A to B illustrates being **LOGICAL**. A person lounging in a hammock, doing nothing, depicts being **IDLE**. A person sleeping at a desk with a \"Zzz\" bubble signifies being **LAZY**. A person holding all the cookies for themselves clearly shows being **SELFISH**. A teacher with a ruler, looking stern, represents someone **STRICT**. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Professor Strict, known for his **strict** rules, always emphasized the **merit** of hard work. He truly valued students who were **diligent**, but he couldn't stand those who were **lazy** and spent their time **idle**. He found it particularly frustrating when students were **selfish**, caring only for themselves. Yet, he always admired a **clever** student who could present a **logical** argument, even if it challenged his own views.", "story_kr": "**엄한** 규칙으로 유명한 스트릭트 교수님은 항상 노력의 **가치**를 강조하셨다. 교수님은 **근면한** 학생들을 진심으로 소중히 여기셨지만, **게으른** 데다 **나태한** 시간을 보내는 학생들은 참지 못하셨다. 특히 자기 자신만 생각하는 **이기적인** 태도를 보일 때는 더욱 답답해하셨다. 하지만 교수님은 자신의 견해에 도전하더라도 **논리적인** 주장을 펼칠 줄 아는 **영리한** 학생은 언제나 존경하셨다.", "song_title": "Eye of the Tiger", "song_artist": "Survivor", "song_intro": "1982년 영화 '록키 3'의 주제곡으로 큰 인기를 얻은 록 음악으로, 목표를 향해 끊임없이 노력하는 투지를 노래합니다.", "song_desc": "이 노래는 **근면한** 노력과 **엄한** 자기 관리를 통해 **게으른** 마음을 극복하고 성공의 **가치**를 쟁취하는 과정을 잘 보여줍니다.", "movie_title": "Whiplash", "movie_year": 2014, "movie_desc": "재즈 드러머를 꿈꾸는 학생과 그의 **엄한** 교수 사이의 갈등과 성장을 그린 영화로, 광기 어린 열정과 노력을 보여줍니다.", "movie_connection": "이 영화는 **엄한** 스승 밑에서 **근면한** 노력을 통해 재능의 **가치**를 증명하려는 학생의 모습을 그리며, **게으른** 태도는 용납되지 않음을 보여줍니다."}, {"scene": "Perceptions & Unusualness", "scene_kr": "인식과 특이함", "words": [{"en": "complex", "kr": "복잡한·단지·콤플렉스"}, {"en": "complicated", "kr": "복잡한"}, {"en": "odd", "kr": "이상한·홀수의"}, {"en": "strange", "kr": "이상한·낯선"}, {"en": "obvious", "kr": "명백한·분명한"}, {"en": "incredible", "kr": "믿을 수 없는"}, {"en": "miracle", "kr": "기적"}, {"en": "predict", "kr": "예측·예견하다"}], "prompt": "A thought-provoking educational illustration exploring perceptions and unusual concepts. An intricate, multi-layered machine represents something **COMPLEX**. A tangled ball of yarn illustrates something **COMPLICATED**. A square wheel on a bicycle depicts something **ODD**. An alien creature in a normal city street shows something **STRANGE**. A giant arrow pointing directly at something makes it **OBVIOUS**. A person juggling flaming swords effortlessly is an **INCREDIBLE** sight. A tiny plant growing through concrete symbolizes a **MIRACLE**. A crystal ball showing a future event illustrates how we **PREDICT**. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Our science project was about a **complex** machine, but building it became incredibly **complicated**.", "story_kr": "우리 과학 프로젝트는 **복잡한** 기계에 관한 것이었지만, 그것을 만드는 것은 믿을 수 없을 만큼 **복잡한** 일이 되었다.", "song_title": "Bohemian Rhapsody", "song_artist": "Queen", "song_intro": "1975년에 발표된 퀸의 대표곡으로, 오페라와 록을 결합한 독특한 형식의 명곡입니다.", "song_desc": "이 곡의 **복잡한** 구성과 **이상한** 가사, 그리고 **예측**할 수 없는 전개는 마치 **기적**처럼 느껴지는 **믿을 수 없는** 경험을 선사합니다.", "movie_title": "The Matrix", "movie_year": 1999, "movie_desc": "가상 현실 속에서 인류를 지배하는 기계에 맞서 싸우는 주인공 네오의 이야기를 그린 SF 액션 블록버스터입니다.", "movie_connection": "영화 속 **복잡한** 가상 현실과 **이상한** 현상들은 진실이 **명백**해지는 순간 **예측**할 수 없는 **믿을 수 없는 기적**을 만들어냅니다."}, {"scene": "Social Conduct & Sound", "scene_kr": "사회적 행동과 소리", "words": [{"en": "justice", "kr": "정의"}, {"en": "moral", "kr": "도덕의·도덕률·교훈"}, {"en": "noise", "kr": "시끄러운 소리·소음"}, {"en": "noisy", "kr": "시끄러운"}, {"en": "silence", "kr": "침묵"}, {"en": "silent", "kr": "조용한·침묵하는"}], "prompt": "An informative educational illustration focusing on social conduct and sound. A blindfolded figure holding scales symbolizes **JUSTICE**. A fork in the road, with one path clearly good and the other bad, represents a **MORAL** choice. Sound waves emanating from a loud speaker depict **NOISE**. A group of children shouting and playing loudly illustrates something **NOISY**. A library with a \"Shhh\" sign represents **SILENCE**. A person with a finger to their lips signifies being **SILENT**. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "The usually **noisy** squirrel, Chippy, suddenly demanded **silence** in the forest meeting. He declared, 'To achieve true **justice** for our stolen nuts, we must follow a strict **moral** code!' All the other animals became **silent**, except for a tiny, suspicious **noise** coming from behind a bush. Chippy knew that sound meant trouble!", "story_kr": "평소 **시끄러운** 다람쥐 치피가 갑자기 숲 회의에서 **침묵**을 요구했다. 그는 '도둑맞은 견과류에 대한 진정한 **정의**를 이루려면 엄격한 **도덕률**을 따라야 한다!'고 선언했다. 다른 모든 동물들은 **조용**해졌지만, 덤불 뒤에서 작고 수상한 **소음**이 들려왔다. 치피는 그 소리가 문제의 시작임을 알았다!", "song_title": "The Sound of Silence", "song_artist": "Simon & Garfunkel", "song_intro": "1964년에 발표된 포크 록 곡으로, 현대 사회의 소통 부재와 고독감을 은유적으로 표현한 명곡입니다.", "song_desc": "이 노래는 사람들이 서로에게 귀 기울이지 않는 **침묵** 속에서 진정한 **정의**와 **도덕률**이 사라지는 **시끄러운** 세상을 **조용**히 성찰하게 합니다.", "movie_title": "To Kill a Mockingbird", "movie_year": 1962, "movie_desc": "인종 차별이 심했던 미국 남부를 배경으로, 변호사 애티커스 핀치가 억울한 흑인 남성을 변호하며 **정의**를 위해 싸우는 이야기를 그린 명작입니다.", "movie_connection": "이 영화는 **정의**와 **도덕률**에 대한 깊은 질문을 던지며, 사회의 **시끄러운** 편견 속에서도 **조용한** 용기를 지키는 **침묵**의 힘을 보여줍니다."}, {"scene": "Foolishness & Absence", "scene_kr": "어리석음과 부재", "words": [{"en": "silly", "kr": "어리석은·바보 같은"}, {"en": "stupid", "kr": "어리석은·멍청한"}, {"en": "back", "kr": "되돌아오다·뒤로·뒤"}, {"en": "hardly", "kr": "거의 ~ 않다"}], "prompt": "A simple educational illustration depicting foolishness and absence. A person wearing mismatched socks and a funny hat shows they are **SILLY**. A person trying to push a door marked \"pull\" illustrates being **STUPID**. A person walking away, looking **BACK** over their shoulder, shows a return or looking behind. A nearly empty glass of water with only a few drops left visually represents **HARDLY** any. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "My friend made a **silly** mistake, thinking the test was tomorrow. When he realized it was today, he felt so **stupid**! He had to run all the way **back** home to grab his study notes. Because of his rush, he **hardly** finished the test on time.", "story_kr": "내 친구는 시험이 내일인 줄 아는 **어리석은** 실수를 저질렀다. 오늘인 것을 깨달았을 때, 그는 정말 **멍청한** 기분이었다! 그는 공부 노트를 가지러 집으로 **되돌아** 달려가야 했다. 서두른 탓에 그는 시험을 제시간에 **거의** 끝내지 못했다.", "song_title": "Yesterday", "song_artist": "The Beatles", "song_intro": "1965년에 발표된 비틀즈의 대표곡으로, 과거의 사랑을 그리워하며 후회하는 감정을 담은 발라드입니다.", "song_desc": "이 노래는 사랑하는 사람과의 이별 후 '어리석은' 자신을 돌아보며 '어제'로 '되돌아가고' 싶은 마음을 '거의' 모든 가사에 담고 있습니다.", "movie_title": "Groundhog Day", "movie_year": 1993, "movie_desc": "매일 똑같은 하루를 반복하게 되는 한 남자의 이야기를 그린 코미디 영화입니다.", "movie_connection": "주인공은 매일 반복되는 날 속에서 '어리석은' 실수를 저지르며 '뒤로' 돌아갈 수 없는 상황에 '거의' 절망하지만, 결국 자신의 '멍청한' 행동을 깨닫고 변화합니다."}, {"scene": "The Quest for Truth and Wisdom", "scene_kr": "진실과 지혜를 찾아서", "words": [{"en": "suspect", "kr": "의심하다·혐의"}, {"en": "thought", "kr": "생각·사고"}, {"en": "tough", "kr": "힘든·강인한·질긴"}, {"en": "truth", "kr": "진실·사실·진리"}, {"en": "wise", "kr": "지혜로운·현명한"}], "prompt": "A colorful educational illustration set in a cozy, old-fashioned study. A **WISE** old detective, with a magnifying glass and a thoughtful expression, sits at a desk piled with books. Above his head, a swirling cloud of ideas and a glowing lightbulb represent his deep **THOUGHT**. On the desk, a person with a determined expression is trying to untangle a very knotted rope, symbolizing a **TOUGH** challenge. The detective is shining a flashlight on a glowing scroll that clearly reads \"TRUTH,\" revealing it from a hidden compartment. In the shadows of the room, a silhouetted figure with a question mark above their head is barely visible, representing a **SUSPECT**. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "I began to **suspect** my little brother when my favorite cookie disappeared. My first **thought** was that finding the culprit would be a **tough** task. But then, my **wise** grandma, who always knows the **truth**, pointed to a trail of crumbs leading right to his bed!", "story_kr": "내가 가장 좋아하는 쿠키가 사라졌을 때, 나는 남동생을 **의심하기** 시작했다. 범인을 찾는 것이 **힘든** 일일 거라고 처음에는 **생각했다**. 하지만 언제나 **진실**을 아는 나의 **지혜로운** 할머니가 침대로 이어지는 부스러기 흔적을 가리켰다!", "song_title": "Bohemian Rhapsody", "song_artist": "Queen", "song_intro": "1975년 발매된 퀸의 대표곡으로, 오페라와 록을 결합한 독특한 형식의 명곡입니다.", "song_desc": "이 노래는 살인이라는 **혐의**와 **힘든** 상황 속에서 **진실**을 마주하며 **지혜로운** 선택을 고민하는 복잡한 **생각**을 담고 있습니다.", "movie_title": "The Shawshank Redemption", "movie_year": 1994, "movie_desc": "부당하게 살인 **혐의**를 쓰고 종신형을 선고받은 주인공 앤디가 쇼생크 교도소에서 희망을 찾아가는 감동적인 이야기입니다.", "movie_connection": "주인공은 **힘든** 교도소 생활 속에서 **진실**을 밝히려는 **생각**을 잃지 않고, **지혜로운** 방법으로 자유를 향해 나아갑니다."}]}], "_chapter_info": {"chapter_num": 7, "chapter_title_en": "Emotions & character", "chapter_title_kr": "감정과 성격"}, "_pdf_stem": "영포자 1등급 만들기 7장"};
+</script>
+<script>
+
+(function() {
+  "use strict";
+
+  const cats = vocabData.categories || [];
+  const contentEl = document.getElementById("content");
+  // ── Markdown bold → HTML ──
+  function boldify(text) {
+    if (!text) return "";
+    return text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  }
+
+  // ── Apple Music URL ──
+  function appleMusicUrl(artist, title) {
+    var raw = (artist || "") + " " + (title || "");
+    var term = raw.split(/[+\s]+/).filter(Boolean).join(" ");
+    return "https://music.apple.com/search?term=" + encodeURIComponent(term);
+  }
+
+
+  // ── IMDB URL ──
+  function imdbUrl(title, year) {
+    var term = (title || "") + (year ? " " + year : "");
+    return "https://www.imdb.com/find/?q=" + encodeURIComponent(term.trim());
+  }
+
+  // ── Render all categories ──
+  function renderAll() {
+    let html = "";
+    cats.forEach(function(cat) {
+      html += '<section class="cat-section" id="cat-' + cat.id + '">';
+      html += '<h2 class="cat-header">' + cat.emoji + ' ' + cat.name + '</h2>';
+      cat.groups.forEach(function(g, gi) {
+        const imgPath = cat.id + "/" + cat.id + "_" + String(gi + 1).padStart(2, "0") + ".png";
+        html += '<div class="scene-card">';
+        // Scene title
+        html += '<div class="scene-title">Scene ' + (gi + 1) + ': ' + esc(g.scene);
+        html += '<span class="scene-title-kr">' + esc(g.scene_kr || "") + '</span></div>';
+        // Image
+        html += '<div class="scene-img-wrap">';
+        html += '<img class="scene-img" src="' + imgPath + '" alt="' + esc(g.scene) + '" loading="lazy">';
+        html += '</div>';
+        // Words
+        html += '<div class="word-list">';
+        g.words.forEach(function(w, wi) {
+          html += '<div class="word-row" data-idx="' + wi + '">';
+          html += '<span class="word-en"><span class="word-num">' + (wi + 1) + '.</span>' + esc(w.en) + '<button class="speak-btn" data-speak="' + esc(w.en) + '" title="발음 듣기">🔊</button></span>';
+          html += '<span class="word-kr">' + esc(w.kr) + '</span>';
+          html += '</div>';
+        });
+        html += '</div>';
+        // Story
+        if (g.story_en || g.story_kr) {
+          html += '<div class="story-section">';
+          html += '<div class="story-divider"></div>';
+          html += '<div class="story-label">📖 Story <button class="speak-btn story-speak" data-speak-story="' + esc(g.story_en || "") + '" title="스토리 낭독">🔊</button></div>';
+          if (g.story_en) html += '<div class="story-en">' + boldify(esc(g.story_en)) + '</div>';
+          if (g.story_kr) html += '<div class="story-kr">' + boldify(esc(g.story_kr)) + '</div>';
+          html += '</div>';
+        }
+        // Song & Movie
+        if (g.song_title || g.movie_title) {
+          html += '<div class="media-section">';
+          if (g.song_title) {
+            const url = appleMusicUrl(g.song_artist || "", g.song_title);
+            html += '<div class="media-block">';
+            html += '<div class="media-header song">🎵 Recommended Song</div>';
+            html += '<div class="media-title">🎵 ' + esc(g.song_title) + ' — ' + esc(g.song_artist || "") + ' <a href="' + url + '" target="_blank" rel="noopener" class="apple-music-link" title="Apple Music에서 듣기"><svg class="apple-music-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M23.994 6.124a9.23 9.23 0 0 0-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043a5.022 5.022 0 0 0-1.877-.726 10.496 10.496 0 0 0-1.564-.15c-.04-.003-.083-.01-.124-.013H5.986c-.152.01-.303.017-.455.026-.747.043-1.49.123-2.193.4-1.336.53-2.3 1.452-2.865 2.78-.192.448-.292.925-.363 1.408-.056.392-.088.785-.1 1.18 0 .032-.007.062-.01.093v12.223c.01.14.017.283.027.424.05.815.154 1.624.497 2.373.65 1.42 1.738 2.353 3.234 2.802.42.127.856.187 1.297.228.473.044.948.06 1.423.06h12.142c.18-.012.36-.02.54-.03.727-.04 1.45-.11 2.14-.36 1.44-.52 2.41-1.45 3.01-2.87.18-.43.29-.88.36-1.34.08-.51.12-1.02.13-1.53-.01-4.16-.01-8.33 0-12.5zM17.87 12.97l-.002.058c0 2.697.002 5.394-.002 8.09 0 .36-.037.717-.144 1.064-.2.63-.64 1.03-1.264 1.244-.37.126-.756.18-1.15.197-.634.027-1.24-.07-1.768-.434-.752-.516-1.063-1.238-.94-2.14.09-.636.47-1.08 1.015-1.38.453-.25.946-.378 1.448-.488.37-.082.742-.148 1.103-.266.384-.126.585-.377.613-.792.01-.138.006-.277.006-.415V8.674c0-.2-.043-.3-.236-.256-.597.136-1.193.276-1.79.413l-4.142.957c-.122.03-.164.085-.163.21v8.74c0 .18.007.363-.012.54-.07.65-.32 1.2-.86 1.59-.41.296-.878.434-1.378.488-.6.065-1.18-.01-1.712-.313-.85-.48-1.196-1.236-1.1-2.186.07-.688.44-1.175 1.013-1.498.395-.223.826-.35 1.264-.44.464-.098.932-.18 1.39-.3.325-.083.536-.284.597-.628.02-.117.025-.238.025-.357V6.334c0-.307.055-.396.353-.467l6.52-1.502c.156-.036.314-.066.472-.098.196-.04.3.02.3.224v8.48z"/></svg></a></div>';
+            if (g.song_intro) html += '<div class="media-desc">' + boldify(esc(g.song_intro)) + '</div>';
+            if (g.song_desc) html += '<div class="media-desc">' + boldify(esc(g.song_desc)) + '</div>';
+            html += '</div>';
+          }
+          if (g.movie_title) {
+            html += '<div class="media-block">';
+            html += '<div class="media-header movie">🎬 Recommended Movie</div>';
+            const imdbLink = imdbUrl(g.movie_title, g.movie_year);
+            html += '<div class="media-title">🎬 ' + esc(g.movie_title) + ' (' + (g.movie_year || "") + ') <a href="' + imdbLink + '" target="_blank" rel="noopener" class="imdb-link" title="IMDb에서 보기"><svg class="imdb-icon" viewBox="0 0 64 32" fill="currentColor"><rect width="64" height="32" rx="4"/><text x="32" y="22" text-anchor="middle" font-family="Impact,Arial Black,sans-serif" font-size="18" font-weight="700" fill="#000" letter-spacing="1">IMDb</text></svg></a></div>';
+            if (g.movie_desc) html += '<div class="media-desc">' + boldify(esc(g.movie_desc)) + '</div>';
+            if (g.movie_connection) html += '<div class="media-desc movie-conn">' + boldify(esc(g.movie_connection)) + '</div>';
+            html += '</div>';
+          }
+          html += '</div>';
+        }
+        html += '</div>'; // scene-card
+      });
+      html += '</section>';
+    });
+    contentEl.innerHTML = html;
+  }
+
+  // ── HTML escape ──
+  function esc(s) {
+    if (!s) return "";
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  // ── TTS (Web Speech API) ──
+  // ── 영어 음성 선택 (한국어 시스템에서도 영어 음성 강제) ──
+  var _enVoice = null;
+  var _voicesReady = false;
+  function loadEnVoice() {
+    var voices = window.speechSynthesis.getVoices();
+    if (!voices.length) return;
+    _voicesReady = true;
+    var preferred = ["Samantha", "Karen", "Daniel", "Moira", "Tessa", "Fiona", "Alex"];
+    for (var p = 0; p < preferred.length; p++) {
+      for (var v = 0; v < voices.length; v++) {
+        if (voices[v].name.indexOf(preferred[p]) !== -1 && voices[v].lang.indexOf("en") === 0) {
+          _enVoice = voices[v]; return;
+        }
+      }
+    }
+    for (var v = 0; v < voices.length; v++) {
+      if (voices[v].lang === "en-US") { _enVoice = voices[v]; return; }
+    }
+    for (var v = 0; v < voices.length; v++) {
+      if (voices[v].lang.indexOf("en") === 0) { _enVoice = voices[v]; return; }
+    }
+  }
+  window.speechSynthesis.getVoices();
+  if (window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = loadEnVoice;
+  }
+  loadEnVoice();
+
+  function speak(text, btn) {
+    if (!window.speechSynthesis) return;
+    if (!_voicesReady) loadEnVoice();
+    window.speechSynthesis.cancel();
+    document.querySelectorAll(".speak-btn.speaking").forEach(function(b) { b.classList.remove("speaking"); });
+    var utter = new SpeechSynthesisUtterance(text.replace(/\*\*/g, ""));
+    utter.lang = "en-US";
+    utter.rate = 0.92;
+    if (_enVoice) utter.voice = _enVoice;
+    if (btn) {
+      btn.classList.add("speaking");
+      utter.onend = function() { btn.classList.remove("speaking"); };
+      utter.onerror = function() { btn.classList.remove("speaking"); };
+    }
+    window.speechSynthesis.speak(utter);
+  }
+
+  // ── Click delegation: speak buttons + quiz toggle ──
+  contentEl.addEventListener("click", function(e) {
+    // Speak button (word or story)
+    var btn = e.target.closest(".speak-btn");
+    if (btn) {
+      e.stopPropagation();
+      var word = btn.getAttribute("data-speak");
+      var story = btn.getAttribute("data-speak-story");
+      speak(word || story || "", btn);
+      return;
+    }
+  });
+
+  // ── Category tabs ──
+  const tabs = document.querySelectorAll(".cat-tab");
+  function setActiveTab(catId) {
+    tabs.forEach(function(t) {
+      t.classList.toggle("active", t.dataset.cat === catId);
+    });
+  }
+  tabs.forEach(function(tab) {
+    tab.addEventListener("click", function() {
+      const id = tab.dataset.cat;
+      setActiveTab(id);
+      const section = document.getElementById("cat-" + id);
+      if (section) section.scrollIntoView({ behavior: "smooth" });
+    });
+  });
+
+  // ── Scroll spy: highlight active tab on scroll ──
+  let ticking = false;
+  window.addEventListener("scroll", function() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function() {
+      const sections = document.querySelectorAll(".cat-section");
+      let current = "";
+      sections.forEach(function(sec) {
+        const top = sec.getBoundingClientRect().top;
+        if (top < 180) current = sec.id.replace("cat-", "");
+      });
+      if (current) setActiveTab(current);
+      ticking = false;
+    });
+  });
+
+  // ── Theme toggle ──
+  const themeBtn = document.getElementById("theme-toggle");
+  function applyTheme(dark) {
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    themeBtn.textContent = dark ? "☀️" : "🌙";
+    try { localStorage.setItem("vocab-theme", dark ? "dark" : "light"); } catch(e) {}
+  }
+  themeBtn.addEventListener("click", function() {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    applyTheme(!isDark);
+  });
+  // Init theme
+  (function() {
+    var saved = null;
+    try { saved = localStorage.getItem("vocab-theme"); } catch(e) {}
+    if (saved) { applyTheme(saved === "dark"); }
+    else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) { applyTheme(true); }
+  })();
+
+  // ── Init ──
+  renderAll();
+  if (cats.length > 0) setActiveTab(cats[0].id);
+
+  // ── Hash routing ──
+  if (window.location.hash) {
+    var h = window.location.hash.replace("#", "");
+    var sec = document.getElementById("cat-" + h);
+    if (sec) { setActiveTab(h); setTimeout(function() { sec.scrollIntoView(); }, 100); }
+  }
+})();
+
+</script>
+</body>
+</html>

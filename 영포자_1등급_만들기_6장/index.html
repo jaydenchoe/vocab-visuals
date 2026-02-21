@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>영포자 1등급 만들기 6장 — Vocabulary Visuals</title>
+<style>
+
+/* ===== CSS Variables & Theme ===== */
+:root {
+  --bg: #f8f9fa;
+  --bg-card: #ffffff;
+  --bg-header: #1a1a2e;
+  --text: #1a1a2e;
+  --text-secondary: #555;
+  --text-muted: #888;
+  --border: #e0e0e0;
+  --accent: #4361ee;
+  --accent-light: #e8edff;
+  --song-color: #7b2d8e;
+  --movie-color: #b33a3a;
+  --bold-color: #2563eb;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --radius: 12px;
+  --nav-h: 48px;
+  --header-h: 64px;
+}
+[data-theme="dark"] {
+  --bg: #0f0f1a;
+  --bg-card: #1a1a2e;
+  --bg-header: #0a0a15;
+  --text: #e8e8f0;
+  --text-secondary: #b0b0c0;
+  --text-muted: #777;
+  --border: #2a2a3e;
+  --accent: #6d8aff;
+  --accent-light: #1e2640;
+  --bold-color: #7dacff;
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + var(--nav-h) + 12px); }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+  background: var(--bg); color: var(--text);
+  line-height: 1.6; min-height: 100vh;
+  padding-top: calc(var(--header-h) + var(--nav-h));
+}
+
+/* ===== Header ===== */
+#header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--bg-header); color: #fff; height: var(--header-h);
+}
+.header-inner {
+  max-width: 900px; margin: 0 auto; height: 100%;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px;
+}
+.header-left h1 { font-size: 1.15rem; font-weight: 700; }
+.header-sub { font-size: 0.78rem; opacity: 0.7; }
+.header-right { display: flex; gap: 8px; }
+.btn-icon {
+  background: rgba(255,255,255,0.12); border: none; color: #fff;
+  width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+  font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.btn-icon:hover { background: rgba(255,255,255,0.25); }
+
+/* ===== Category Nav ===== */
+#cat-nav {
+  position: fixed; top: var(--header-h); left: 0; right: 0; z-index: 99;
+  background: var(--bg); border-bottom: 1px solid var(--border);
+  height: var(--nav-h);
+}
+.cat-tabs-wrap {
+  max-width: 900px; margin: 0 auto; height: 100%;
+  display: flex; align-items: center; gap: 4px;
+  padding: 0 12px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.cat-tabs-wrap::-webkit-scrollbar { display: none; }
+.cat-tab {
+  flex-shrink: 0; padding: 6px 14px; border: none; border-radius: 20px;
+  background: transparent; color: var(--text-secondary); cursor: pointer;
+  font-size: 0.82rem; font-weight: 500; white-space: nowrap;
+  transition: all 0.2s;
+}
+.cat-tab:hover { background: var(--accent-light); }
+.cat-tab.active { background: var(--accent); color: #fff; font-weight: 600; }
+
+/* ===== Main Content ===== */
+#main { max-width: 1080px; margin: 0 auto; padding: 20px 16px 60px; }
+
+/* ===== Category Section ===== */
+.cat-section { margin-bottom: 48px; }
+.cat-header {
+  font-size: 1.4rem; font-weight: 700; margin-bottom: 20px;
+  padding-bottom: 10px; border-bottom: 2px solid var(--accent);
+  color: var(--accent);
+}
+
+/* ===== Scene Card ===== */
+.scene-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  margin-bottom: 28px; box-shadow: var(--shadow);
+}
+.scene-title {
+  padding: 14px 18px; font-size: 1rem; font-weight: 600;
+  background: var(--accent-light); border-bottom: 1px solid var(--border);
+}
+.scene-title-kr { font-size: 0.82rem; color: var(--text-muted); font-weight: 400; margin-left: 8px; }
+
+/* ===== Scene Image ===== */
+.scene-img-wrap { text-align: center; padding: 12px; background: var(--bg); }
+.scene-img {
+  width: 100%; height: auto; border-radius: 8px;
+  object-fit: contain;
+}
+
+/* ===== Word List ===== */
+.word-list { padding: 0 18px 12px; }
+.word-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 0; border-bottom: 1px dashed var(--border);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.word-row:last-child { border-bottom: none; }
+.word-en { font-weight: 600; font-size: 0.95rem; }
+.word-num { color: var(--text-muted); font-size: 0.82rem; margin-right: 6px; }
+.word-kr {
+  font-size: 0.88rem; color: var(--text-secondary); text-align: right;
+  transition: opacity 0.2s, filter 0.2s;
+}
+
+/* ===== Speak Button ===== */
+.speak-btn {
+  background: none; border: none; cursor: pointer; padding: 0 0 0 5px;
+  font-size: 0.75rem; opacity: 0.45; vertical-align: middle;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.speak-btn:hover { opacity: 0.9; transform: scale(1.2); }
+.speak-btn.speaking { opacity: 1; animation: pulse 0.8s infinite; }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.25); } }
+.story-speak { font-size: 0.82rem; margin-left: 6px; }
+
+/* ===== Story Section ===== */
+.story-section { padding: 0 18px 16px; }
+.story-divider {
+  height: 2px; background: linear-gradient(90deg, var(--accent), transparent);
+  margin: 8px 0 14px; border-radius: 1px;
+}
+.story-label {
+  font-size: 0.88rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;
+}
+.story-en { font-size: 0.88rem; line-height: 1.65; margin-bottom: 10px; color: var(--text); }
+.story-kr { font-size: 0.82rem; line-height: 1.65; color: var(--text-secondary); }
+.story-en strong, .story-kr strong { color: var(--bold-color); font-weight: 700; }
+
+/* ===== Song & Movie ===== */
+.media-section { padding: 0 18px 18px; }
+.media-block { margin-top: 12px; }
+.media-header {
+  font-size: 0.85rem; font-weight: 700; margin-bottom: 4px;
+}
+.media-header.song { color: var(--song-color); }
+.media-header.movie { color: var(--movie-color); }
+.media-title {
+  font-size: 0.88rem; font-weight: 600; margin-bottom: 3px;
+}
+.apple-music-link {
+  display: inline-flex; align-items: center; vertical-align: middle;
+  color: #fc3c44; text-decoration: none; margin-left: 6px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.apple-music-link:hover { transform: scale(1.15); opacity: 0.85; }
+.apple-music-icon { width: 20px; height: 20px; }
+.imdb-link {
+  display: inline-flex; align-items: center; vertical-align: middle;
+  color: #f5c518; text-decoration: none; margin-left: 8px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.imdb-link:hover { transform: scale(1.15); opacity: 0.85; }
+.imdb-icon { width: 24px; height: 14px; }
+.media-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.55; }
+.movie-conn { color: var(--text-muted); margin-top: 2px; }
+
+/* ===== Footer ===== */
+footer {
+  text-align: center; padding: 24px; color: var(--text-muted);
+  font-size: 0.75rem; border-top: 1px solid var(--border);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 640px) {
+  .header-left h1 { font-size: 1rem; }
+  .cat-header { font-size: 1.15rem; }
+}
+@media (min-width: 1024px) {
+  html { font-size: 18px; }
+  #main { max-width: 1200px; }
+  .scene-img { width: 100%; }
+  .header-left h1 { font-size: 1.3rem; }
+  .scene-title { font-size: 1.12rem; }
+  .cat-header { font-size: 1.6rem; }
+  .word-en { font-size: 1.08rem; }
+  .word-kr { font-size: 1rem; }
+  .story-en { font-size: 1rem; }
+  .story-kr { font-size: 0.95rem; }
+  .media-desc { font-size: 0.92rem; }
+  .media-title { font-size: 1rem; }
+}
+.btn-home {
+  background: rgba(255,255,255,0.12); border: none; color: #fff;
+  padding: 4px 12px; border-radius: 6px; cursor: pointer;
+  font-size: 0.85rem; font-weight: 500; text-decoration: none;
+  display: flex; align-items: center; gap: 4px;
+  transition: background 0.2s; margin-right: 8px;
+}
+.btn-home:hover { background: rgba(255,255,255,0.25); }
+
+</style>
+</head>
+<body>
+
+<header id="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <h1>영포자 1등급 만들기 6장</h1>
+      <span class="header-sub">신체와 건강 — 138 words / 21 scenes</span>
+    </div>
+    <div class="header-right">
+      <a href="../" class="btn-home">🏠 홈</a>
+      <button id="theme-toggle" class="btn-icon" title="Dark/Light Mode">🌙</button>
+    </div>
+  </div>
+</header>
+
+<nav id="cat-nav">
+  <div class="cat-tabs-wrap">
+    <button class="cat-tab" data-cat="body_health_diseases">🤒 Diseases</button>
+<button class="cat-tab" data-cat="treatment">🩹 Treatment</button>
+<button class="cat-tab" data-cat="anatomy_body">🧍‍♂️ Anatomy & Body</button>
+<button class="cat-tab" data-cat="body_health_state">🧍‍♀️ State</button>
+<button class="cat-tab" data-cat="body_health">❤️ Body & Health</button>
+
+  </div>
+</nav>
+
+<main id="main">
+  <div id="content"></div>
+</main>
+
+<footer>
+  <p>Generated by Vocabulary Visuals Pipeline</p>
+</footer>
+
+<script>
+const vocabData = {"categories": [{"id": "body_health_diseases", "name": "Diseases", "emoji": "🤒", "groups": [{"scene": "Common Ailments and Symptoms", "scene_kr": "흔한 질병과 증상", "words": [{"en": "sick", "kr": "병든[아픈]"}, {"en": "illness", "kr": "병"}, {"en": "fever", "kr": "열(병)"}, {"en": "cough", "kr": "기침(하다)"}, {"en": "headache", "kr": "두통"}, {"en": "ache", "kr": "아프다·쑤(아픔[통증])"}], "prompt": "A colorful educational illustration depicting a cozy bedroom scene where a child looks pale and SICK in bed, with a worried parent nearby. A thermometer shows a high FEVER, and the child occasionally COUGHS into their elbow. Another person in the background holds their temples, indicating a HEADACHE. A thought bubble above the child represents a general ILLNESS, and a small animated starburst indicates an ACHING stomach. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "One morning, Timmy felt quite **sick**. He knew an **illness** was coming because he had a high **fever** and a terrible **cough**. His head started to **ache**, giving him a pounding **headache**. He just wanted to stay in bed all day!", "story_kr": "어느 날 아침, 티미는 꽤 **아팠다**. 그는 높은 **열**과 심한 **기침** 때문에 **병**이 오고 있음을 직감했다. 머리가 **쑤셨고**, 지독한 **두통**까지 찾아왔다. 그는 그저 하루 종일 침대에 누워있고 싶었다!", "song_title": "Fix You", "song_artist": "Coldplay", "song_intro": "2005년 발매된 콜드플레이의 대표곡으로, 힘든 시간을 보내는 사람을 위로하고 고쳐주겠다는 희망적인 메시지를 담은 곡입니다.", "song_desc": "이 노래는 **병**으로 인해 몸이 **아프고** **쑤시며**, **열**이나 **두통**, **기침** 등으로 **아픈** 사람에게 위로와 치유를 약속하는 메시지를 전합니다.", "movie_title": "Contagion", "movie_year": 2011, "movie_desc": "전 세계를 휩쓰는 치명적인 바이러스의 확산과 이를 막기 위한 인류의 사투를 그린 스릴러 영화입니다.", "movie_connection": "이 영화는 **병**에 걸려 **아픈** 사람들이 **열**과 **기침**, **두통** 등 다양한 증상으로 고통받고 몸이 **쑤시는** 모습을 사실적으로 보여줍니다."}, {"scene": "Injuries and Serious Conditions", "scene_kr": "부상 및 심각한 질환", "words": [{"en": "disease", "kr": "(질)병"}, {"en": "cancer", "kr": "암"}, {"en": "injure", "kr": "다치게 하다"}, {"en": "wound", "kr": "상처·상처를 입히다"}], "prompt": "A colorful educational illustration set in a medical context. One panel shows a person tripping and falling, about to INJURE their knee. Another panel shows a visible WOUND on an arm, being cleaned and bandaged. A microscope slide with abstract cells represents CANCER, and a generic medical chart with a 'DISEASE' label symbolizes various ailments. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "My dog, Max, is usually healthy, but I worry about every little thing! Once, he got a small **wound** on his paw from a thorn. I panicked, thinking it could cause a terrible **disease**, or even something as serious as **cancer**! The vet laughed, saying it was minor and wouldn't seriously **injure** him, just needed a bandage.", "story_kr": "내 강아지 맥스는 늘 건강하지만, 나는 사소한 일에도 늘 걱정이 많아요! 한번은 가시에 찔려 발에 작은 **상처**가 났죠. 나는 그것이 끔찍한 **질병**을 일으키거나, 심지어 **암**처럼 심각한 것이 될까 봐 너무 걱정했어요! 수의사 선생님은 웃으면서 사소한 일이고 맥스를 심하게 **다치게** 하지 않을 테니, 그냥 밴드만 붙이면 된다고 하셨죠.", "song_title": "Fix You", "song_artist": "Coldplay", "song_intro": "2005년에 발매된 콜드플레이의 대표곡으로, 힘든 시간을 겪는 사람에게 위로와 치유를 전하는 감성적인 록 발라드입니다.", "song_desc": "누군가 **상처**받거나 **다쳐서** 힘들어할 때, 그들을 위로하고 치유하려는 노래의 메시지가 **질병**과 **암** 같은 고통을 이겨내는 과정과 연결됩니다.", "movie_title": "The Fault in Our Stars", "movie_year": 2014, "movie_desc": "암에 걸린 두 십대 소년 소녀의 아름답고도 슬픈 사랑 이야기를 그린 감동적인 로맨스 드라마 영화입니다.", "movie_connection": "주인공들이 **암**이라는 **질병**으로 인해 **다치고** **상처**받으면서도 사랑을 찾아가는 과정을 통해 삶의 소중함을 깊이 있게 다룹니다."}]}, {"id": "treatment", "name": "Treatment", "emoji": "🩹", "groups": [{"scene": "The Journey to Wellness", "scene_kr": "건강 회복의 여정", "words": [{"en": "cure", "kr": "치료제[치료법]·치료하다"}, {"en": "heal", "kr": "치유하다, 낫게 하다"}, {"en": "protect", "kr": "보호하다"}, {"en": "recover", "kr": "회복되다[되찾다]"}, {"en": "restore", "kr": "회복시키다·복원[복구]하다"}, {"en": "treatment", "kr": "치료"}], "prompt": "A colorful educational illustration depicting a bright hospital room where a young patient is on the path to wellness. A kind doctor is explaining the overall **TREATMENT** plan, pointing to a chart showing the patient's progress. The patient, who had a broken arm, is now smiling, showing their body beginning to **HEAL** under a clean bandage. A nurse carefully administers medication, which is part of the **CURE** for their illness. The patient is seen taking their first steps, demonstrating their ability to **RECOVER** strength. Nearby, a physical therapist helps the patient with gentle exercises to **RESTORE** full mobility to their arm. A visible sign like a hand sanitizer dispenser or a mask on a visitor subtly indicates efforts to **PROTECT** against further infection. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Our tiny robot friend, Rusty, got a bad virus! We needed a special **treatment** to fix him. Dr. Genius invented a powerful **cure** that could quickly **heal** his circuits. We watched as Rusty began to **recover** his functions, and the doctor even managed to **restore** his shiny metallic finish. Now, Rusty is programmed to **protect** himself from any future digital illnesses!", "story_kr": "우리 작은 로봇 친구 러스티가 심한 바이러스에 걸렸어요! 우리는 그를 고치기 위한 특별한 **치료**가 필요했죠. 지니어스 박사님은 그의 회로를 빠르게 **낫게 할** 강력한 **치료제**를 발명했어요. 우리는 러스티가 기능을 **회복하기** 시작하는 것을 지켜봤고, 박사님은 심지어 그의 반짝이는 금속 마감재까지 **복원시키는** 데 성공했어요. 이제 러스티는 미래의 어떤 디지털 질병으로부터도 자신을 **보호하도록** 프로그램되어 있답니다!", "song_title": "Heal the World", "song_artist": "Michael Jackson", "song_intro": "1991년 발표된 마이클 잭슨의 곡으로, 전 세계의 고통을 치유하고 더 나은 세상을 만들자는 희망적인 메시지를 담고 있습니다.", "song_desc": "이 노래는 고통받는 이들을 **치유하고(heal)**, 세상을 **회복시키며(restore)**, 서로를 **보호하자는(protect)** 단어들과 깊이 연결됩니다.", "movie_title": "Forrest Gump", "movie_year": 1994, "movie_desc": "톰 행크스 주연의 감동적인 영화로, 순수한 마음을 가진 포레스트 검프가 역경을 이겨내며 현대사의 주요 사건들을 경험하는 이야기입니다.", "movie_connection": "주인공 포레스트가 신체적 어려움을 **회복하고(recover)**, 주변 사람들의 마음을 **치유하며(heal)**, 삶의 가치를 **복원하는(restore)** 과정이 이 단어들과 잘 어울립니다."}]}, {"id": "anatomy_body", "name": "Anatomy & Body", "emoji": "🧍‍♂️", "groups": [{"scene": "Face, Senses & Expressions", "scene_kr": "얼굴, 감각 및 표현", "words": [{"en": "cheek", "kr": "뺨"}, {"en": "throat", "kr": "목(구멍)"}, {"en": "tongue", "kr": "혀·언어"}, {"en": "voice", "kr": "목소리"}, {"en": "sight", "kr": "시력·보기·눈·시야·광경"}, {"en": "smell", "kr": "냄새(나다)"}, {"en": "tear", "kr": "눈물·찢다"}, {"en": "sense", "kr": "감각·느낌·분별력"}], "prompt": "A close-up illustration of a human head and face, showing a rosy CHEEK, a visible THROAT area, a slightly extended TONGUE, sound waves representing a VOICE emanating from the mouth, eyes clearly demonstrating SIGHT, a nose sniffing a flower to illustrate SMELL, a single TEAR rolling down a cheek, and a thought bubble above the head containing icons for the five SENSES (eye, ear, nose, hand, tongue). Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "When I bit into the super sour lemon, my **cheek** muscles tightened instantly. My **tongue** felt a powerful **sense** of tingle, and my **throat** suddenly felt dry. A tiny **tear** escaped my eye, and my **voice** came out as a squeak. The strong **smell** of citrus filled the air, making the funny **sight** of my face even more memorable.", "story_kr": "아주 신 레몬을 한입 베어 물었을 때, 내 **뺨** 근육이 즉시 꽉 조여졌다. 나의 **혀**는 강력한 따끔거리는 **감각**을 느꼈고, **목구멍**은 갑자기 말랐다. 작은 **눈물**이 눈에서 흘러내렸고, 내 **목소리**는 삑 하는 소리로 나왔다. 강한 시트러스 **냄새**가 공기를 가득 채웠고, 내 얼굴의 우스꽝스러운 **광경**을 더욱 기억에 남게 했다.", "song_title": "All of Me", "song_artist": "John Legend", "song_intro": "2013년에 발표된 존 레전드의 대표곡으로, 사랑하는 사람의 모든 것을 사랑한다는 달콤한 고백을 담은 발라드입니다.", "song_desc": "이 노래는 사랑하는 사람을 **눈**으로 보고, **목소리**를 듣고, **혀**로 맛보고, **뺨**을 만지는 등 모든 **감각**으로 느끼는 깊은 사랑을 표현하여 단어들과 잘 연결됩니다.", "movie_title": "The Miracle Worker", "movie_year": 1962, "movie_desc": "시각과 청각을 잃은 헬렌 켈러가 앤 설리번 선생님을 만나 세상과 소통하는 방법을 배우는 감동적인 실화 영화입니다.", "movie_connection": "이 영화는 **시력**과 **목소리**를 잃은 헬렌이 **감각**을 통해 세상을 이해하고, **혀**와 손으로 언어를 배우며, 좌절과 기쁨의 **눈물**을 흘리는 과정을 보여주어 단어들과 깊이 연결됩니다."}, {"scene": "Limbs & External Features", "scene_kr": "사지 및 외부 특징", "words": [{"en": "arm", "kr": "팔·무기"}, {"en": "hand", "kr": "손·건네주다"}, {"en": "foot", "kr": "발, (길이 단위) 피트"}, {"en": "knee", "kr": "무릎"}, {"en": "fist", "kr": "주먹"}, {"en": "palm", "kr": "손바닥·야자과 나무"}, {"en": "nail", "kr": "손톱[발톱]·못"}], "prompt": "An illustration of a person in a dynamic pose, highlighting their limbs and extremities. One bent ARM is visible, an open HAND with its PALM facing forward, a bare FOOT, a bent KNEE, a clenched FIST, and clearly visible FINGERNAILS (NAIL) on the open hand. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "My **arm** stretched out, trying to grab the cookie jar. But my **hand** slipped, and I landed on one **knee**. I rubbed my sore **foot** and clenched my **fist** in frustration. Looking at my **palm**, I saw a tiny scratch from my **nail**.", "story_kr": "내 **팔**을 쭉 뻗어 과자 통을 잡으려 했다. 하지만 **손**이 미끄러져 한쪽 **무릎**으로 넘어졌다. 아픈 **발**을 문지르며 좌절감에 **주먹**을 꽉 쥐었다. **손바닥**을 보니 **손톱**에 긁힌 작은 상처가 있었다.", "song_title": "Can't Stop The Feeling!", "song_artist": "Justin Timberlake", "song_intro": "2016년 영화 <트롤>의 주제곡으로, 듣기만 해도 몸을 들썩이게 하는 신나는 댄스 팝입니다.", "song_desc": "이 노래는 온몸을 이용해 춤추고 즐기는 분위기를 담고 있어, 팔, 손, 발, 무릎 등 다양한 신체 부위 단어들과 잘 어울립니다.", "movie_title": "Rocky", "movie_year": 1976, "movie_desc": "필라델피아의 무명 복서 록키 발보아가 세계 챔피언과 대결하는 기회를 얻는 과정을 그린 감동적인 스포츠 드라마입니다.", "movie_connection": "이 영화는 복싱이라는 격렬한 스포츠를 통해 **팔**, **주먹**, **발** 등 신체 부위의 강인함과 한계를 보여주며, **무릎** 꿇지 않는 투지를 강조합니다."}, {"scene": "Internal Anatomy & Biology", "scene_kr": "내부 해부학 및 생물학", "words": [{"en": "backbone", "kr": "등뼈[척추]"}, {"en": "blood", "kr": "피[혈액]"}, {"en": "brain", "kr": "뇌"}, {"en": "cell", "kr": "세포"}, {"en": "lung", "kr": "폐[허파]"}, {"en": "muscle", "kr": "근육"}, {"en": "stomach", "kr": "위·배[복부]"}], "prompt": "An educational illustration of a transparent human body, revealing key internal organs. A prominent BACKBONE (spine) runs down the back, a detailed BRAIN is visible within the skull, a pair of LUNGS are shown, a STOMACH organ is present, and a flexing BICEP MUSCLE is highlighted. An inset magnified view shows red BLOOD cells flowing in a vessel, and a single CELL with its nucleus. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "My **brain** woke up, telling my **muscle** to stretch. My **stomach** rumbled, needing food, so my **blood** quickly carried nutrients to every **cell** after I ate. My **lung** breathed deeply, supported by my strong **backbone**, ready for a new day!", "story_kr": "나의 **뇌**가 깨어나 **근육**에게 스트레칭하라고 명령했어요. **위**가 음식을 달라고 꼬르륵거렸고, 그래서 내가 식사 후 **피**는 영양분을 모든 **세포**로 빠르게 날랐죠. 나의 **폐**는 튼튼한 **등뼈**의 지지를 받으며 깊게 숨을 쉬었고, 새로운 하루를 맞이할 준비가 되었어요!", "song_title": "Stronger (What Doesn't Kill You)", "song_artist": "Kelly Clarkson", "song_intro": "2011년에 발매된 켈리 클락슨의 대표곡으로, 역경을 이겨내고 더욱 강해진다는 희망적인 메시지를 담고 있습니다.", "song_desc": "이 노래의 '더 강해진다'는 메시지는 우리의 **근육**, **등뼈**, 그리고 모든 **세포**가 합쳐져 몸을 튼튼하게 만드는 과정과 연결됩니다.", "movie_title": "Fantastic Voyage", "movie_year": 1966, "movie_desc": "과학자들이 소형 잠수함을 타고 사람의 몸속으로 들어가 뇌 속 혈전을 제거하려는 모험을 그린 고전 SF 영화입니다.", "movie_connection": "이 영화는 **뇌**, **피**, **세포**, **폐**, **위**, **근육** 등 우리 몸속 장기들을 직접 탐험하는 이야기로, 모든 단어와 깊이 연결됩니다."}, {"scene": "Body Actions & Reactions", "scene_kr": "신체 동작 및 반응", "words": [{"en": "scratch", "kr": "긁다[할퀴다]"}, {"en": "shake", "kr": "흔들(리)다"}, {"en": "stretch", "kr": "늘리다·당기다·뻗다"}, {"en": "struggle", "kr": "투쟁(하다)·허우적[버둥]거리다"}, {"en": "swallow", "kr": "삼키다·제비"}, {"en": "sigh", "kr": "한숨(을 쉬다)"}, {"en": "sweat", "kr": "땀·땀을 흘리다"}], "prompt": "A composite educational illustration showing various human actions and reactions. A hand is shown to SCRATCH an itchy arm, two people are shown to SHAKE hands, a person is shown to STRETCH their arms upwards, another person is shown to STRUGGLE while trying to lift a heavy box, a person is shown to SWALLOW a drink, a person is exhaling with a SIGH, and beads of SWEAT are visible on a person's forehead. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Minjun felt a nervous **sweat** on his palms as he stared at the impossible math problem. He let out a deep **sigh**, trying to **stretch** his brain for an answer. His leg started to **shake** uncontrollably, and he wanted to just **swallow** the textbook whole. He had to **struggle** to focus, resisting the urge to **scratch** his head in frustration.", "story_kr": "민준이는 불가능해 보이는 수학 문제를 노려보며 손바닥에 식은 **땀**이 나는 것을 느꼈다. 그는 답을 찾으려고 머리를 **쥐어짜며** 깊은 **한숨**을 쉬었다. 그의 다리는 통제할 수 없이 **흔들리**기 시작했고, 그는 교과서를 통째로 **삼켜**버리고 싶었다. 그는 좌절감에 머리를 **긁적이고** 싶은 충동을 억누르며 집중하기 위해 **애써야** 했다.", "song_title": "Lose Yourself", "song_artist": "Eminem", "song_intro": "2002년 영화 <8 마일>의 OST로, 래퍼 에미넴이 자신의 삶과 음악적 투쟁을 담아낸 희망과 열정의 힙합 곡입니다.", "song_desc": "이 노래는 꿈을 향한 치열한 **투쟁**(struggle)과 긴장감 속에서 **땀**(sweat)을 흘리고 두려움을 **삼키는**(swallow) 등 단어들이 묘사하는 절박한 상황과 감정을 잘 보여줍니다.", "movie_title": "위플래쉬 (Whiplash)", "movie_year": 2014, "movie_desc": "최고의 재즈 드러머가 되기 위해 광기 어린 교수의 혹독한 가르침을 견뎌내는 한 학생의 열정과 고통을 그린 음악 영화입니다.", "movie_connection": "주인공이 드럼 연습 중 **땀**(sweat)을 흘리고 **고군분투**(struggle)하며, 좌절감에 **한숨**(sigh)을 쉬는 등 목표를 향한 극한의 노력을 단어들이 잘 표현합니다."}, {"scene": "Body Attributes & Categories", "scene_kr": "신체 속성 및 분류", "words": [{"en": "skin", "kr": "피부·가죽·껍질"}, {"en": "physical", "kr": "육체(신체)의·물질[물리]의"}, {"en": "height", "kr": "높이, 키[신장]"}, {"en": "female", "kr": "여성(암컷)(의)"}, {"en": "male", "kr": "남성(수컷의)"}, {"en": "tail", "kr": "꼬리"}], "prompt": "An educational illustration depicting diverse body attributes and categories. Various human figures showcase different SKIN tones, a person is actively engaged in PHYSICAL exercise (e.g., running), two people of noticeably different HEIGHTs stand next to a height chart, a clearly identifiable FEMALE figure and a MALE figure are present, and an animal (e.g., a dog or cat) with a prominent TAIL is included. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "At the Magical Creature Academy, students learned about their unique **physical** traits. A young dragon with shiny green **skin** boasted about his impressive **height**. A **female** unicorn carefully groomed her long, flowing **tail**, while a **male** griffin practiced flying lessons.", "story_kr": "마법 생물 아카데미에서 학생들은 자신들의 독특한 **신체적** 특징에 대해 배웠습니다. 반짝이는 초록색 **피부**를 가진 어린 용은 자신의 엄청난 **키**를 자랑했습니다. 한 **암컷** 유니콘은 길고 흐르는 **꼬리**를 조심스럽게 다듬었고, 한 **수컷** 그리핀은 비행 수업을 연습했습니다.", "song_title": "Born This Way", "song_artist": "Lady Gaga", "song_intro": "2011년에 발매된 이 댄스 팝 곡은 자신을 있는 그대로 사랑하고 정체성을 당당하게 드러내자는 메시지를 담고 있습니다.", "song_desc": "이 노래는 **신체적** 특징, 성별(**여성**, **남성**) 등 각자의 고유한 모습(**피부**, **키**, **꼬리** 같은)을 있는 그대로 사랑하고 받아들이라는 메시지를 담고 있어, 단어들과 깊이 연결됩니다.", "movie_title": "아바타 (Avatar)", "movie_year": 2009, "movie_desc": "제임스 카메론 감독의 SF 블록버스터로, 판도라 행성의 나비족과 인간의 갈등을 그린 영화입니다.", "movie_connection": "나비족의 푸른 **피부**, 큰 **키**, 독특한 **꼬리** 등 **신체적** 특징과 **여성**, **남성** 캐릭터의 모습이 이 단어들과 매우 밀접하게 연결됩니다."}]}, {"id": "body_health_state", "name": "State", "emoji": "🧍‍♀️", "groups": [{"scene": "Life's Journey", "scene_kr": "삶의 여정", "words": [{"en": "alive", "kr": "살아 있는"}, {"en": "live", "kr": "살다·살아 있는"}, {"en": "die", "kr": "죽다"}, {"en": "death", "kr": "죽음"}, {"en": "drown", "kr": "익사하다[익사시키다]"}, {"en": "starve", "kr": "굶주리다[굶어 죽다]"}, {"en": "breath", "kr": "숨[호흡]"}, {"en": "dead", "kr": "죽은"}], "prompt": "A vibrant scene depicting the cycle of life. A baby is ALIVE and a person continues to LIVE happily. In contrast, a person begins to DIE, leading to their DEATH, symbolized by a fading figure. A person is struggling to breathe while they DROWN in water, and another person looks weak and thin from being forced to STARVE. A visible puff of BREATH comes from a person's mouth. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Captain Bob was **alive**, but barely. He had to **live** through this storm. If he didn't find food soon, he would **starve** to **death**. The waves threatened to make him **drown**, and every **breath** was a struggle. He refused to be found **dead** on this island!", "story_kr": "밥 선장은 간신히 **살아 있는** 상태였습니다. 그는 이 폭풍을 **살아** 넘겨야 했습니다. 만약 곧 음식을 찾지 못하면, 굶어서 **죽음**에 이를 것이었습니다. 파도는 그를 **익사시킬** 듯 위협했고, 한 **숨** 한 숨이 고통스러웠습니다. 그는 이 섬에서 **죽은** 채로 발견되는 것을 거부했습니다!", "song_title": "I Will Survive", "song_artist": "Gloria Gaynor", "song_intro": "1978년에 발표된 디스코 팝의 전설적인 곡으로, 이별의 아픔을 딛고 다시 일어서겠다는 강한 의지를 담고 있습니다.", "song_desc": "이 노래는 삶의 어려움 속에서도 **살아 있는** 상태로 **살아**남아 **죽음**과 같은 절망을 이겨내겠다는 메시지가 단어들과 잘 연결됩니다.", "movie_title": "Cast Away", "movie_year": 2000, "movie_desc": "톰 행크스 주연의 생존 영화로, 무인도에 표류한 남자가 다시 문명으로 돌아가기 위해 고군분투하는 이야기입니다.", "movie_connection": "주인공이 무인도에서 **살아 있는** 상태로 **살아**남기 위해 **굶주리거나 익사할** 뻔하는 등 **죽음**의 위협 속에서 매 **숨**을 이어가는 모습이 단어들과 깊이 연결됩니다."}, {"scene": "Physical Appearance & Features", "scene_kr": "신체 외모 및 특징", "words": [{"en": "curly", "kr": "곱슬곱슬한"}, {"en": "smooth", "kr": "매끄러운[부드러운]"}, {"en": "bare", "kr": "벌거벗은"}, {"en": "handsome", "kr": "잘생긴"}, {"en": "fat", "kr": "살찐[뚱뚱한]·지방"}, {"en": "overweight", "kr": "과체중의·중량 초과의"}, {"en": "pale", "kr": "창백한·옅은"}], "prompt": "A diverse group of people showcasing various physical appearances. One person has beautiful CURLY hair, while another has sleek, SMOOTH hair. A person stands BARE-chested, revealing their skin. A HANDSOME man smiles confidently. A somewhat FAT person and an OVERWEIGHT person are depicted, showing different body types. Another person has a PALE complexion, indicating they might be unwell or surprised. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "At the beach, a **handsome** man with **curly** hair tried to hide his **pale** skin under a big hat. He knew he was a bit **overweight**, maybe even **fat**, but he still admired how **smooth** the ocean stones felt under his feet. Suddenly, a gust of wind blew his hat off, leaving his head completely **bare**!", "story_kr": "해변에서, **잘생긴** 남자는 **곱슬곱슬한** 머리를 하고 큰 모자 아래 **창백한** 피부를 숨기려 애썼다. 그는 자신이 약간 **과체중의**, 어쩌면 **살찐** 상태라는 것을 알았지만, 발아래 바닷돌이 얼마나 **매끄러운지** 여전히 감탄했다. 갑자기 바람이 세게 불어 그의 모자를 날려버렸고, 그의 머리는 완전히 **벌거벗은** 채 드러났다!", "song_title": "Beautiful", "song_artist": "Christina Aguilera", "song_intro": "2002년에 발표된 이 곡은 외모에 대한 불안감을 극복하고 자신의 아름다움을 찾아가는 메시지를 담은 발라드입니다.", "song_desc": "이 노래는 외모에 대한 불안감과 **창백한**, **살찐**, **과체중의** 모습에 대한 고민을 다루며, 결국 자기 자신을 **잘생긴**, **매끄러운** 존재로 받아들이는 과정을 통해 단어들과 연결됩니다.", "movie_title": "Shallow Hal", "movie_year": 2001, "movie_desc": "외모만 중시하던 남자가 최면에 걸려 내면의 아름다움을 보게 되면서 벌어지는 이야기를 그린 로맨틱 코미디 영화입니다.", "movie_connection": "이 영화는 **살찐**, **과체중의** 사람을 외모로만 판단하던 주인공이 내면을 보게 되면서 진정한 아름다움을 깨닫는 과정을 통해, **잘생긴** 외모나 **매끄러운** 피부 같은 겉모습 너머의 가치를 단어들과 연결합니다."}, {"scene": "Physical Abilities & Challenges", "scene_kr": "신체 능력 및 어려움", "words": [{"en": "blind", "kr": "시각 장애가 있는[눈먼]"}, {"en": "deaf", "kr": "청각 장애가 있는"}, {"en": "dumb", "kr": "멍청한·말을 못하는"}, {"en": "disabled", "kr": "장애가 있는"}, {"en": "strength", "kr": "힘·강점"}, {"en": "weak", "kr": "약한"}, {"en": "balance", "kr": "균형(을 잡다)"}], "prompt": "A scene illustrating different physical abilities and challenges. A BLIND person uses a cane to navigate. A DEAF person communicates using sign language. A DUMB person (unable to speak) expresses themselves non-verbally. A DISABLED person uses a wheelchair. A muscular person demonstrates great STRENGTH by lifting weights. A WEAK person struggles to stand upright. A person skillfully maintains their BALANCE on one foot. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "In a magical forest, lived a little squirrel who was **disabled** because he was **blind** in one eye and a bit **deaf** in one ear. He couldn't speak much, making him seem **dumb** sometimes, but his friends knew his true **strength** was his amazing sense of smell. While he was physically **weak** in some ways, he learned to use his tail to keep perfect **balance** on the thinnest branches.", "story_kr": "마법의 숲에, 한쪽 눈이 **눈먼** 데다 한쪽 귀가 조금 **청각 장애가 있는** 바람에 **장애가 있는** 작은 다람쥐가 살았어요. 그는 말을 잘 못해서 가끔 **말을 못하는** 것처럼 보였지만, 친구들은 그의 진정한 **강점**이 놀라운 후각이라는 것을 알았죠. 어떤 면에서는 몸이 **약한** 편이었지만, 그는 가장 가는 나뭇가지 위에서도 완벽한 **균형**을 유지하기 위해 꼬리를 사용하는 법을 배웠답니다.", "song_title": "This Is Me", "song_artist": "Keala Settle & The Greatest Showman Ensemble", "song_intro": "2017년 영화 <위대한 쇼맨>의 OST 곡으로, 세상의 편견에 맞서 자신을 당당하게 드러내자는 메시지를 담은 파워풀한 곡입니다.", "song_desc": "이 노래는 신체적 **장애가 있는** 것을 포함해 어떤 모습이든 자신의 **강점**을 찾아 당당하게 살아가는 사람들의 이야기를 담아, 약점처럼 보이는 것이 오히려 특별한 **힘**이 될 수 있다는 메시지를 전합니다.", "movie_title": "The Intouchables (언터처블: 1%의 우정)", "movie_year": 2011, "movie_desc": "전신마비 **장애가 있는** 프랑스 귀족과 그의 젊은 간병인의 특별한 우정을 그린 감동적인 프랑스 영화입니다.", "movie_connection": "이 영화는 신체적으로 **약한** 주인공이 삶의 **균형**을 잃지 않고 새로운 **강점**을 찾아가는 과정을 보여주며, **장애가 있는** 사람도 충분히 행복하고 풍요로운 삶을 살 수 있음을 이야기합니다."}, {"scene": "Health & Well-being", "scene_kr": "건강 및 안녕", "words": [{"en": "health", "kr": "건강"}, {"en": "fitness", "kr": "신체 단련, (신체적인) 건강"}, {"en": "fit", "kr": "맞다[맞추다]·건강한, 알맞은"}, {"en": "condition", "kr": "상태·환경·조건"}, {"en": "state", "kr": "국가·주·상태"}, {"en": "appetite", "kr": "식욕"}, {"en": "relax", "kr": "쉬다[긴장을 풀다]"}], "prompt": "A positive scene promoting well-being. People are engaging in activities that show good HEALTH and FITNESS. A FIT person is jogging energetically. A doctor assesses a patient's overall CONDITION and STATE of health. A person enjoys a hearty meal, showing a good APPETITE. Another person is seen peacefully trying to RELAX on a comfortable couch. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "After a long week, my **health** wasn't in the best **state**. I knew I needed to improve my **fitness**, so I decided to hit the gym. The trainer helped me find exercises that **fit** my current **condition**, and soon I started to feel much better. After a good workout, I had a huge **appetite** and could finally **relax**.", "story_kr": "긴 한 주를 보내고 나니, 내 **건강**은 최상의 **상태**가 아니었다. 나는 **신체 단련**을 개선해야 한다는 것을 알았고, 그래서 헬스장에 가기로 결심했다. 트레이너는 내 현재 **상태**에 **맞는** 운동을 찾는 것을 도와주었고, 곧 훨씬 나아지는 것을 느꼈다. 좋은 운동 후에는 엄청난 **식욕**이 생겼고, 마침내 **긴장을 풀 수** 있었다.", "song_title": "Eye of the Tiger", "song_artist": "Survivor", "song_intro": "1982년 영화 '록키 3'의 주제곡으로, 역경을 이겨내고 목표를 향해 나아가는 강렬한 의지를 담은 록 음악입니다.", "song_desc": "이 노래는 어려운 **상태**에서도 **신체 단련**을 통해 강해지고, 최상의 **건강**을 유지하며 목표에 **맞게** 나아가는 과정을 잘 보여줍니다.", "movie_title": "록키 (Rocky)", "movie_year": 1976, "movie_desc": "무명의 복서 록키 발보아가 세계 챔피언과의 대결을 앞두고 혹독한 훈련을 거쳐 성장하는 과정을 그린 감동적인 스포츠 영화입니다.", "movie_connection": "록키는 열악한 **상태**에서도 **신체 단련**을 통해 **건강**을 회복하고, 챔피언에 **맞설** 수 있는 최고의 **상태**를 만들기 위해 노력하며, 훈련 후에는 엄청난 **식욕**으로 에너지를 채우고 **긴장을 푸는** 모습을 보여줍니다."}, {"scene": "Discomfort & Critical States", "scene_kr": "불편함 및 위급 상황", "words": [{"en": "pain", "kr": "고통·수고"}, {"en": "sore", "kr": "아픈[쑤시는]"}, {"en": "uncomfortable", "kr": "불편한"}, {"en": "serious", "kr": "진지한·심각한·중대한"}, {"en": "harmful", "kr": "해로운"}, {"en": "emergency", "kr": "비상[응급]·사태"}, {"en": "hopeless", "kr": "가망 없는[절망적인]"}], "prompt": "A scene depicting various states of discomfort and critical situations. A person grimaces in PAIN, holding a SORE muscle. Another person shifts restlessly, feeling UNCOMFORTABLE. A doctor looks with a SERIOUS expression at a patient's chart. A warning sign indicates something HARMFUL. An AMBULANCE with flashing lights signifies an EMERGENCY. A person sits with a downcast expression, feeling HOPELESS about their situation. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "After eating too much spicy tteokbokki, my stomach felt a terrible **pain**. Soon, my throat became so **sore** that even talking was **uncomfortable**. I worried this might be something **serious**, perhaps even **harmful** to my health! It felt like an **emergency**, and for a moment, I felt **hopeless** about ever eating tteokbokki again.", "story_kr": "너무 매운 떡볶이를 먹고 나니, 배에 끔찍한 **고통**이 느껴졌다. 곧 목이 너무 **아픈** 나머지 말하기도 **불편한** 지경이었다. 이것이 혹시 건강에 **해로운** 것은 아닐까, **심각한** 문제일까 걱정했다! **비상사태**처럼 느껴졌고, 잠시 동안 다시는 떡볶이를 먹을 수 없을 것 같아 **절망적인** 기분이었다.", "song_title": "Fix You", "song_artist": "Coldplay", "song_intro": "2005년 발매된 콜드플레이의 대표곡으로, 사랑하는 사람이 힘든 시간을 보낼 때 위로와 희망을 전하는 발라드입니다.", "song_desc": "이 노래는 **고통**과 **절망적인** 상황에 처한 사람을 위로하며, **불편한** 감정을 극복하려는 메시지를 담고 있어 관련 단어들과 잘 연결됩니다.", "movie_title": "Cast Away", "movie_year": 2000, "movie_desc": "무인도에 표류한 한 남자의 생존기를 그린 영화로, 톰 행크스의 열연이 돋보이는 감동적인 작품입니다.", "movie_connection": "주인공이 겪는 육체적 **고통**과 **불편한** 상황, 그리고 **절망적인** **비상사태** 속에서 생존을 위해 고군분투하는 모습이 단어들과 깊이 연결됩니다."}, {"scene": "Bodily Sensations & Reactions", "scene_kr": "신체 감각 및 반응", "words": [{"en": "thirsty", "kr": "목마른"}, {"en": "tired", "kr": "피곤한·지친"}, {"en": "yawn", "kr": "하품·하품하다"}, {"en": "tremble", "kr": "떨다·흔들리다"}, {"en": "temperature", "kr": "온도·체온"}, {"en": "asleep", "kr": "잠든"}], "prompt": "A scene showing common bodily sensations and reactions. A person eagerly drinks water because they are THIRSTY. Another person looks visibly TIRED, rubbing their eyes. Someone lets out a big YAWN. A person shivers and TREMBLES from cold. A thermometer shows a high TEMPERATURE. Finally, a person is peacefully ASLEEP in bed. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "After a super long day, I felt so **thirsty** and incredibly **tired**. I couldn't help but let out a huge **yawn**. My hands started to **tremble** slightly, and I worried my **temperature** might be high, but soon I was fast **asleep**.", "story_kr": "아주 긴 하루를 보낸 후, 나는 너무 **목마른** 데다 엄청나게 **피곤**했다. 나도 모르게 커다란 **하품**을 터뜨리고 말았다. 손이 살짝 **떨리기** 시작했고, **체온**이 높을까 걱정했지만, 곧 나는 깊이 **잠든** 상태였다.", "song_title": "The Lazy Song", "song_artist": "Bruno Mars", "song_intro": "2010년에 발매된 브루노 마스의 유쾌한 팝송으로, 아무것도 하지 않고 하루 종일 쉬고 싶다는 내용을 담고 있습니다.", "song_desc": "이 노래는 **피곤**해서 **하품**하고 그저 **잠든** 채 쉬고 싶은 마음을 유머러스하게 표현하여, 지친 상태의 단어들과 잘 연결됩니다.", "movie_title": "Cast Away", "movie_year": 2000, "movie_desc": "톰 행크스 주연의 생존 영화로, 무인도에 홀로 표류하게 된 남자의 처절한 생존기를 그립니다.", "movie_connection": "주인공이 무인도에서 **목마른** 상태로 **피곤**에 지쳐 **떨며** 힘겹게 버티다 **잠든** 모습을 통해, 극한의 상황에서 느껴지는 단어들과 깊이 연결됩니다."}]}, {"id": "body_health", "name": "Body & Health", "emoji": "❤️", "groups": [{"scene": "Medical Care & Health Issues", "scene_kr": "의료 및 건강 문제", "words": [{"en": "ambulance", "kr": "구급차"}, {"en": "patient", "kr": "환자·참을성 있는"}, {"en": "drug", "kr": "약·마약"}, {"en": "cause", "kr": "원인(이 되다)·일으키다"}, {"en": "catch", "kr": "(볼)잡다·(병에)걸리다"}, {"en": "affect", "kr": "영향·결과·효과"}], "prompt": "A bustling hospital scene where a red AMBULANCE with flashing lights arrives, bringing a PERSON who is a PATIENT on a stretcher. A DOCTOR is holding a bottle of DRUG (medicine). A small diagram shows a virus as the CAUSE of an illness. In the background, a person sneezes into a tissue, trying not to CATCH a cold, while a cloud of sickness negatively AFFECTS a body outline. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "One day, my pet hamster, Hammy, started to act really strange, and I worried he might **catch** a serious illness. I quickly called the animal hospital, and an animal **ambulance** arrived to pick up my little **patient**. The vet gave Hammy a tiny **drug** that tasted like banana, explaining that stress could **cause** his strange behavior. She assured me the medicine would not **affect** his appetite, and soon Hammy was back to his playful self!", "story_kr": "어느 날, 내 애완 햄스터 해미가 갑자기 이상하게 행동하기 시작했고, 나는 해미가 심각한 병에 **걸릴까 봐** 걱정했다. 나는 재빨리 동물 병원에 전화했고, 동물 **구급차**가 내 작은 **환자**를 태우러 도착했다. 수의사 선생님은 해미에게 바나나 맛이 나는 아주 작은 **약**을 주시며, 스트레스가 그런 이상 행동의 **원인**이 될 수 있다고 설명했다. 선생님은 그 약이 해미의 식욕에 **영향**을 주지 않을 것이라고 안심시켰고, 곧 해미는 다시 장난기 넘치는 모습으로 돌아왔다!", "song_title": "Fix You", "song_artist": "Coldplay", "song_intro": "2005년에 발매된 콜드플레이의 대표곡으로, 힘들어하는 연인을 위로하고 고쳐주고 싶다는 내용의 감동적인 발라드입니다.", "song_desc": "이 노래는 슬픔에 빠진 **환자**를 위로하고 **영향**을 주어 고통의 **원인**을 찾아내고, 다시 일어설 수 있도록 붙잡아(catch) 주는 따뜻한 메시지를 담고 있습니다.", "movie_title": "Contagion", "movie_year": 2011, "movie_desc": "치명적인 바이러스가 전 세계로 확산되며 인류를 위협하는 과정을 그린 스티븐 소더버그 감독의 재난 스릴러 영화입니다.", "movie_connection": "이 영화는 사람들이 치명적인 바이러스에 **걸리고(catch)**, 질병을 **일으키는(cause)** **원인**을 찾아 **구급차**에 실려 가는 수많은 **환자**들을 구하기 위한 **약(drug)** 개발이 인류에게 미치는 **영향(affect)**을 생생하게 보여줍니다."}, {"scene": "Recovery & Well-being", "scene_kr": "회복 및 건강 관리", "words": [{"en": "overcome", "kr": "극복하다"}, {"en": "life", "kr": "삶, 생명"}, {"en": "wash", "kr": "씻다"}, {"en": "tiny", "kr": "아주 작은"}, {"en": "smoke", "kr": "연기·담배를 피우다"}], "prompt": "A bright, hopeful scene where a person, smiling and looking strong, has OVERCOME a sickness and is doing light exercise in a park. A vibrant green tree symbolizes healthy LIFE. Nearby, hands are being WASHED thoroughly with soap and water, with TINY germs visibly disappearing. In the corner, a 'No Smoking' sign is prominently displayed, with a wisp of SMOKE curling away from a discarded cigarette, emphasizing health. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Captain Sparkle, a **tiny** hero, had to **overcome** a giant cookie monster to save the city's **life**. The monster accidentally let out a huge puff of chocolate **smoke**, making everyone cough. Captain Sparkle used her water powers to **wash** away the sticky chocolate, saving the day!", "story_kr": "**아주 작은** 영웅 스파클 선장은 도시의 **생명**을 구하기 위해 거대한 쿠키 몬스터를 **극복해야** 했다. 몬스터는 실수로 거대한 초콜릿 **연기**를 내뿜어 모두를 기침하게 만들었다. 스파클 선장은 물의 힘을 이용해 끈적한 초콜릿을 **씻어내며** 하루를 구했다!", "song_title": "Fight Song", "song_artist": "Rachel Platten", "song_intro": "2015년 발표된 이 곡은 역경 속에서도 자신을 믿고 싸워나가는 용기를 주는 희망찬 팝송입니다.", "song_desc": "이 노래는 **삶**의 어려움을 **극복**하고 **아주 작은** 불꽃이 큰 변화를 가져올 수 있다는 메시지를 담고 있어, 포기하지 않는 정신과 잘 연결됩니다.", "movie_title": "Life of Pi", "movie_year": 2012, "movie_desc": "조난당한 소년 파이가 호랑이와 함께 **아주 작은** 구명보트에서 망망대해를 표류하며 **삶**의 의미를 찾아가는 감동적인 모험 영화입니다.", "movie_connection": "이 영화는 절망적인 상황을 **극복**하고 생존을 위해 싸우는 주인공의 **삶**을 통해, 어떤 어려움도 이겨낼 수 있다는 메시지를 전달합니다."}, {"scene": "Food, Diet & Nutrition", "scene_kr": "음식, 식단 및 영양", "words": [{"en": "diet", "kr": "식사·다이어트(식단)"}, {"en": "meal", "kr": "식사"}, {"en": "nutrient", "kr": "영양소[영양분]"}, {"en": "protein", "kr": "단백질"}, {"en": "feed", "kr": "먹을 것을 주다[먹이다]"}, {"en": "bitter", "kr": "쓴·쓰라린"}, {"en": "flavor", "kr": "맛(을 내다)"}], "prompt": "A cheerful kitchen scene featuring a balanced DIET plate filled with colorful fruits and vegetables. A family is happily enjoying a healthy MEAL together at a table. Labels point to different NUTRIENTS (e.g., vitamin C, calcium) in various food items. A piece of grilled chicken is clearly labeled as PROTEIN. A hand is gently FEEDING a small child a spoonful of food. In contrast, a person makes a funny face while tasting something BITTER, like a lemon, while a chef tastes a dish with a satisfied expression, enjoying its rich FLAVOR. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "My strict **diet** meant every **meal** had to be packed with **nutrient**s. I especially needed lots of **protein** to stay strong. Sometimes, the healthy vegetables tasted a bit **bitter**, but Mom would always **feed** me with a smile, saying, 'This **flavor** will make you healthy!'", "story_kr": "나의 엄격한 **식단**은 모든 **식사**가 **영양소**로 가득해야 한다는 것을 의미했다. 나는 특히 강해지기 위해 많은 **단백질**이 필요했다. 가끔 건강한 채소들이 좀 **쓴** 맛이 났지만, 엄마는 항상 미소 지으며 나를 **먹이셨고**, '이 **맛**이 너를 건강하게 만들 거야!'라고 말씀하셨다.", "song_title": "Eat It", "song_artist": "\"Weird Al\" Yankovic", "song_intro": "1984년 마이클 잭슨의 'Beat It'을 패러디한 코미디 팝송으로, 음식을 먹으라는 유쾌한 내용의 곡입니다.", "song_desc": "이 노래는 '먹다'라는 직접적인 주제를 통해 diet, meal, nutrient, protein, feed, flavor 등 음식 및 식사와 관련된 모든 단어와 유머러스하게 연결됩니다.", "movie_title": "Super Size Me", "movie_year": 2004, "movie_desc": "한 남자가 한 달 동안 맥도날드 음식만 먹으며 몸의 변화를 기록한 다큐멘터리 영화입니다.", "movie_connection": "이 영화는 특정 **식단**(diet)이 우리 몸에 미치는 **영양소**(nutrient)와 건강의 중요성을 보여주며, **식사**(meal)와 **맛**(flavor)에 대한 인식을 다시 생각하게 합니다."}, {"scene": "Body Management & Appearance", "scene_kr": "신체 관리 및 외모", "words": [{"en": "weigh", "kr": "무게가 ~이다·무게를 달다"}, {"en": "gain", "kr": "얻다, 늘리다"}, {"en": "miss", "kr": "놓치다·그리워하다"}, {"en": "beauty", "kr": "아름다움·미인"}, {"en": "pretty", "kr": "예쁜[귀여운]·꽤·아주"}, {"en": "ugly", "kr": "못생긴"}, {"en": "blonde", "kr": "금발의"}, {"en": "feature", "kr": "특징·특질·특징"}], "prompt": "A scene focusing on personal appearance and body management. A person stands on a scale, carefully checking their WEIGHt. Another person flexes their arm, happily showing they've GAINED muscle. An empty plate sits on a table, indicating someone MISSED a meal. In a mirror, a person admires their own BEAUTY. A PRETTY flower blooms in a vase. Next to it, a comical, UGLY monster makes a funny face. A person with flowing BLONDE hair smiles. A close-up of a face highlights different FEATURES (eyes, nose, mouth). Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Lily, with her bright **blonde** hair, used to think she was **ugly** whenever she compared herself to others. She tried hard to **gain** the kind of **beauty** she saw in **pretty** magazine models. Soon, she began to **miss** the days when she didn't care how much she would **weigh**. One day, she realized her quirky smile was a unique **feature** that made her truly special.", "story_kr": "밝은 **금발의** 릴리는 자신을 다른 사람들과 비교할 때마다 자신이 **못생겼다**고 생각하곤 했다. 그녀는 **예쁜** 잡지 모델들에게서 본 것과 같은 **아름다움**을 **얻으려고** 애썼다. 곧, 그녀는 자신의 몸무게가 얼마나 **나갈지** 신경 쓰지 않던 시절을 **그리워하기** 시작했다. 어느 날, 그녀는 자신의 개성 있는 미소가 자신을 진정으로 특별하게 만드는 독특한 **특징**이라는 것을 깨달았다.", "song_title": "Scars To Your Beautiful", "song_artist": "Alessia Cara", "song_intro": "2016년 발매된 이 팝송은 사회가 강요하는 아름다움의 기준에 맞추려 애쓰는 사람들에게 진정한 아름다움은 내면에 있다는 메시지를 전합니다.", "song_desc": "이 노래는 외모에 대한 압박, 자신을 **못생겼다**고 느끼는 감정, 그리고 진정한 **아름다움**과 독특한 **특징**을 받아들이는 것과 같은 단어들의 주제와 깊이 연결됩니다.", "movie_title": "Shrek", "movie_year": 2001, "movie_desc": "이 애니메이션 영화는 겉모습은 무섭지만 마음씨 착한 슈렉이 피오나 공주를 구하는 모험을 통해 진정한 사랑과 아름다움의 의미를 찾아가는 이야기입니다.", "movie_connection": "이 영화는 겉모습이 **못생겼다**고 여겨지는 슈렉과 피오나 공주가 서로의 진정한 **아름다움**을 발견하며, 외적인 **특징**보다 내면의 가치가 중요하다는 메시지를 **줍니다**."}, {"scene": "Senses & Perception", "scene_kr": "감각 및 인지", "words": [{"en": "sound", "kr": "소리·~처럼 들리다"}, {"en": "loud", "kr": "(소리가) 큰·시끄러운"}, {"en": "listen", "kr": "듣다"}, {"en": "touch", "kr": "만지다·접촉"}, {"en": "illusion", "kr": "환상[착각]"}, {"en": "straight", "kr": "곧은·똑바른[곧장]"}], "prompt": "A dynamic scene illustrating senses and perception. Musical notes float from a speaker, representing a pleasant SOUND. The speaker itself is blasting LOUD music. A person with an ear cupped is trying to LISTEN intently. A hand gently TOUCHES a soft, textured fabric. A captivating visual ILLUSION (like an optical trick) is displayed on a screen. A person stands with a perfectly STRAIGHT posture. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "One night, I heard a strange **sound** that was incredibly **loud** from my window. I tried to **listen** carefully, but it felt like a dream. When I reached out to **touch** the source, my hand went **straight** through it! It was just an **illusion**.", "story_kr": "어느 날 밤, 창문 밖에서 믿을 수 없을 정도로 **시끄러운** 이상한 **소리**가 들렸어요. 주의 깊게 **들으려고** 했지만, 마치 꿈 같았죠. 그 소리의 근원을 **만지려고** 손을 뻗었을 때, 제 손은 **곧장** 그것을 통과했어요! 그것은 단지 **착각**이었던 거죠.", "song_title": "Sweet Dreams (Are Made of This)", "song_artist": "Eurythmics", "song_intro": "1983년에 발매된 유리스믹스의 대표곡으로, 꿈과 현실, 그리고 삶의 다양한 욕망에 대해 이야기하는 신스팝 명곡입니다.", "song_desc": "이 노래는 우리가 추구하는 '달콤한 꿈'이 때로는 **환상**일 수 있음을 암시하며, 세상의 **소리**에 귀 **기울여** 진실을 찾아야 한다는 메시지를 전달합니다.", "movie_title": "The Matrix", "movie_year": 1999, "movie_desc": "가상 현실과 실제 세계 사이의 경계를 탐구하며 인류의 자유를 위한 싸움을 그린 혁명적인 SF 액션 영화입니다.", "movie_connection": "영화 속 주인공 네오는 우리가 사는 세상이 거대한 **환상**임을 깨닫고, 진실을 **곧장** 마주하기 위해 **듣고** **만지는** 모든 감각을 의심하게 됩니다."}, {"scene": "Mind & Abstract Concepts", "scene_kr": "정신 및 추상적 개념", "words": [{"en": "remember", "kr": "기억하다"}, {"en": "understand", "kr": "이해하다"}, {"en": "soul", "kr": "영·영혼"}, {"en": "way", "kr": "방법·길"}, {"en": "recreation", "kr": "오락[레크리에이션]"}], "prompt": "A thoughtful scene depicting mental and abstract concepts. A thought bubble above a person's head shows a vivid memory, indicating they are trying to REMEMBER something. A lightbulb illuminates above another person's head, signifying they UNDERSTAND a concept. A glowing, ethereal figure represents the SOUL. A clear path leads to a distant destination, showing a WAY forward. In the background, people are engaged in various hobbies, enjoying RECREATION. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "My grandpa always says, 'To truly **understand** life, you must **remember** the joy of simple things!' He believes the human **soul** finds its best **way** through laughter and fun. That's why his favorite **recreation** is telling silly jokes and making everyone smile.", "story_kr": "할아버지는 항상 '삶을 진정으로 **이해하려면**, 소박한 것들의 기쁨을 **기억해야** 한다!'고 말씀하세요. 할아버지는 사람의 **영혼**이 웃음과 즐거움을 통해 최고의 **길**을 찾는다고 믿으시죠. 그래서 할아버지가 가장 좋아하는 **레크리에이션**은 우스꽝스러운 농담을 하고 모두를 웃게 하는 거예요.", "song_title": "What a Wonderful World", "song_artist": "Louis Armstrong", "song_intro": "1967년에 발표된 재즈 명곡으로, 세상의 아름다움과 삶의 소중함을 노래하며 많은 사람에게 희망을 주는 곡입니다.", "song_desc": "이 노래는 세상을 **이해하고** 그 아름다움을 **기억하며**, 삶의 **길**에서 기쁨을 찾는 **영혼**에 대한 메시지를 담고 있어 단어들과 잘 어울립니다.", "movie_title": "Soul", "movie_year": 2020, "movie_desc": "픽사 스튜디오의 애니메이션 영화로, 음악 선생님 조 가드너가 영혼의 세계에서 삶의 진정한 의미를 찾아가는 여정을 그립니다.", "movie_connection": "이 영화는 삶의 목적을 **이해하고** 진정한 **영혼**의 **길**을 찾아가는 과정을 통해, 소중한 순간들을 **기억하며** 즐거움을 찾는 **레크리에이션**의 의미까지 깊이 다룹니다."}, {"scene": "Physical Actions & Objects", "scene_kr": "신체 활동 및 사물", "words": [{"en": "jog", "kr": "조깅하다"}, {"en": "grab", "kr": "움켜잡다[잡아채다], 잡아채기"}, {"en": "bite", "kr": "물다·물기"}, {"en": "press", "kr": "누르다·언론·인쇄"}, {"en": "twist", "kr": "비틀다·돌리다"}, {"en": "wear", "kr": "입고(신고/쓰고) 있다"}, {"en": "rop", "kr": "로프[밧줄]"}, {"en": "castle", "kr": "성(城)"}], "prompt": "An active scene showcasing physical actions and objects. A person is JOGGING energetically in a park. A hand quickly GRABS an apple from a basket. The apple has a BITE taken out of it. A finger is PRESSING a button on a device. A person is gracefully TWISTING their body in a dance move. Another person is WEARING a hat and scarf. A child is happily skipping with a JUMP ROPE. In the distance, a grand CASTLE stands majestically on a hill. Style: bright, clean, cartoon-like educational poster with each key word clearly labeled in bold English next to its visual element.", "story_en": "Every morning, I would **jog** past the ancient **castle**, always admiring its strong walls. One day, I decided to **wear** my lucky hat, hoping for a good run. Suddenly, a mischievous squirrel tried to **grab** my shoelace and give it a playful **bite**! I laughed, then had to **press** a button on my phone to take a picture, but accidentally **twist**ed my ankle on a loose **rop** nearby. What an eventful morning!", "story_kr": "매일 아침, 나는 고대 **성** 옆을 **조깅**하며 튼튼한 성벽을 감탄하곤 했다. 어느 날, 나는 좋은 달리기를 바라며 행운의 모자를 **쓰고** 가기로 했다. 갑자기, 장난꾸러기 다람쥐 한 마리가 내 신발 끈을 **움켜잡고** 장난스럽게 **물려고** 했다! 나는 웃었고, 사진을 찍기 위해 휴대폰 버튼을 **누르려** 했지만, 근처에 있던 느슨한 **로프**에 발목을 실수로 **비틀었다**. 정말 사건 많은 아침이었다!", "song_title": "Eye of the Tiger", "song_artist": "Survivor", "song_intro": "1982년에 발표된 록 음악으로, 영화 '록키 3'의 주제곡으로 유명하며, 역경을 이겨내고 목표를 향해 나아가는 투지를 노래합니다.", "song_desc": "'jog'와 같은 움직임과 'grab', 'twist' 같은 행동 동사들이 목표를 향해 끈기 있게 나아가는 이 노래의 강렬한 투지와 잘 어울립니다.", "movie_title": "The Lord of the Rings: The Fellowship of the Ring", "movie_year": 2001, "movie_desc": "절대 반지를 파괴하기 위한 여정을 그린 판타지 서사시의 첫 번째 작품으로, 프로도와 친구들의 모험을 다룹니다.", "movie_connection": "'castle'과 같은 웅장한 배경과 'jog' 같은 긴 여정, 'grab', 'twist' 등 역경 속에서 벌어지는 다양한 액션들이 이 영화의 모험과 도전을 잘 나타냅니다."}]}], "_chapter_info": {"chapter_num": 6, "chapter_title_en": "Body & Health", "chapter_title_kr": "신체와 건강"}, "_pdf_stem": "영포자 1등급 만들기 6장"};
+</script>
+<script>
+
+(function() {
+  "use strict";
+
+  const cats = vocabData.categories || [];
+  const contentEl = document.getElementById("content");
+  // ── Markdown bold → HTML ──
+  function boldify(text) {
+    if (!text) return "";
+    return text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  }
+
+  // ── Apple Music URL ──
+  function appleMusicUrl(artist, title) {
+    var raw = (artist || "") + " " + (title || "");
+    var term = raw.split(/[+\s]+/).filter(Boolean).join(" ");
+    return "https://music.apple.com/search?term=" + encodeURIComponent(term);
+  }
+
+
+  // ── IMDB URL ──
+  function imdbUrl(title, year) {
+    var term = (title || "") + (year ? " " + year : "");
+    return "https://www.imdb.com/find/?q=" + encodeURIComponent(term.trim());
+  }
+
+  // ── Render all categories ──
+  function renderAll() {
+    let html = "";
+    cats.forEach(function(cat) {
+      html += '<section class="cat-section" id="cat-' + cat.id + '">';
+      html += '<h2 class="cat-header">' + cat.emoji + ' ' + cat.name + '</h2>';
+      cat.groups.forEach(function(g, gi) {
+        const imgPath = cat.id + "/" + cat.id + "_" + String(gi + 1).padStart(2, "0") + ".png";
+        html += '<div class="scene-card">';
+        // Scene title
+        html += '<div class="scene-title">Scene ' + (gi + 1) + ': ' + esc(g.scene);
+        html += '<span class="scene-title-kr">' + esc(g.scene_kr || "") + '</span></div>';
+        // Image
+        html += '<div class="scene-img-wrap">';
+        html += '<img class="scene-img" src="' + imgPath + '" alt="' + esc(g.scene) + '" loading="lazy">';
+        html += '</div>';
+        // Words
+        html += '<div class="word-list">';
+        g.words.forEach(function(w, wi) {
+          html += '<div class="word-row" data-idx="' + wi + '">';
+          html += '<span class="word-en"><span class="word-num">' + (wi + 1) + '.</span>' + esc(w.en) + '<button class="speak-btn" data-speak="' + esc(w.en) + '" title="발음 듣기">🔊</button></span>';
+          html += '<span class="word-kr">' + esc(w.kr) + '</span>';
+          html += '</div>';
+        });
+        html += '</div>';
+        // Story
+        if (g.story_en || g.story_kr) {
+          html += '<div class="story-section">';
+          html += '<div class="story-divider"></div>';
+          html += '<div class="story-label">📖 Story <button class="speak-btn story-speak" data-speak-story="' + esc(g.story_en || "") + '" title="스토리 낭독">🔊</button></div>';
+          if (g.story_en) html += '<div class="story-en">' + boldify(esc(g.story_en)) + '</div>';
+          if (g.story_kr) html += '<div class="story-kr">' + boldify(esc(g.story_kr)) + '</div>';
+          html += '</div>';
+        }
+        // Song & Movie
+        if (g.song_title || g.movie_title) {
+          html += '<div class="media-section">';
+          if (g.song_title) {
+            const url = appleMusicUrl(g.song_artist || "", g.song_title);
+            html += '<div class="media-block">';
+            html += '<div class="media-header song">🎵 Recommended Song</div>';
+            html += '<div class="media-title">🎵 ' + esc(g.song_title) + ' — ' + esc(g.song_artist || "") + ' <a href="' + url + '" target="_blank" rel="noopener" class="apple-music-link" title="Apple Music에서 듣기"><svg class="apple-music-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M23.994 6.124a9.23 9.23 0 0 0-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043a5.022 5.022 0 0 0-1.877-.726 10.496 10.496 0 0 0-1.564-.15c-.04-.003-.083-.01-.124-.013H5.986c-.152.01-.303.017-.455.026-.747.043-1.49.123-2.193.4-1.336.53-2.3 1.452-2.865 2.78-.192.448-.292.925-.363 1.408-.056.392-.088.785-.1 1.18 0 .032-.007.062-.01.093v12.223c.01.14.017.283.027.424.05.815.154 1.624.497 2.373.65 1.42 1.738 2.353 3.234 2.802.42.127.856.187 1.297.228.473.044.948.06 1.423.06h12.142c.18-.012.36-.02.54-.03.727-.04 1.45-.11 2.14-.36 1.44-.52 2.41-1.45 3.01-2.87.18-.43.29-.88.36-1.34.08-.51.12-1.02.13-1.53-.01-4.16-.01-8.33 0-12.5zM17.87 12.97l-.002.058c0 2.697.002 5.394-.002 8.09 0 .36-.037.717-.144 1.064-.2.63-.64 1.03-1.264 1.244-.37.126-.756.18-1.15.197-.634.027-1.24-.07-1.768-.434-.752-.516-1.063-1.238-.94-2.14.09-.636.47-1.08 1.015-1.38.453-.25.946-.378 1.448-.488.37-.082.742-.148 1.103-.266.384-.126.585-.377.613-.792.01-.138.006-.277.006-.415V8.674c0-.2-.043-.3-.236-.256-.597.136-1.193.276-1.79.413l-4.142.957c-.122.03-.164.085-.163.21v8.74c0 .18.007.363-.012.54-.07.65-.32 1.2-.86 1.59-.41.296-.878.434-1.378.488-.6.065-1.18-.01-1.712-.313-.85-.48-1.196-1.236-1.1-2.186.07-.688.44-1.175 1.013-1.498.395-.223.826-.35 1.264-.44.464-.098.932-.18 1.39-.3.325-.083.536-.284.597-.628.02-.117.025-.238.025-.357V6.334c0-.307.055-.396.353-.467l6.52-1.502c.156-.036.314-.066.472-.098.196-.04.3.02.3.224v8.48z"/></svg></a></div>';
+            if (g.song_intro) html += '<div class="media-desc">' + boldify(esc(g.song_intro)) + '</div>';
+            if (g.song_desc) html += '<div class="media-desc">' + boldify(esc(g.song_desc)) + '</div>';
+            html += '</div>';
+          }
+          if (g.movie_title) {
+            html += '<div class="media-block">';
+            html += '<div class="media-header movie">🎬 Recommended Movie</div>';
+            const imdbLink = imdbUrl(g.movie_title, g.movie_year);
+            html += '<div class="media-title">🎬 ' + esc(g.movie_title) + ' (' + (g.movie_year || "") + ') <a href="' + imdbLink + '" target="_blank" rel="noopener" class="imdb-link" title="IMDb에서 보기"><svg class="imdb-icon" viewBox="0 0 64 32" fill="currentColor"><rect width="64" height="32" rx="4"/><text x="32" y="22" text-anchor="middle" font-family="Impact,Arial Black,sans-serif" font-size="18" font-weight="700" fill="#000" letter-spacing="1">IMDb</text></svg></a></div>';
+            if (g.movie_desc) html += '<div class="media-desc">' + boldify(esc(g.movie_desc)) + '</div>';
+            if (g.movie_connection) html += '<div class="media-desc movie-conn">' + boldify(esc(g.movie_connection)) + '</div>';
+            html += '</div>';
+          }
+          html += '</div>';
+        }
+        html += '</div>'; // scene-card
+      });
+      html += '</section>';
+    });
+    contentEl.innerHTML = html;
+  }
+
+  // ── HTML escape ──
+  function esc(s) {
+    if (!s) return "";
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  // ── TTS (Web Speech API) ──
+  // ── 영어 음성 선택 (한국어 시스템에서도 영어 음성 강제) ──
+  var _enVoice = null;
+  var _voicesReady = false;
+  function loadEnVoice() {
+    var voices = window.speechSynthesis.getVoices();
+    if (!voices.length) return;
+    _voicesReady = true;
+    var preferred = ["Samantha", "Karen", "Daniel", "Moira", "Tessa", "Fiona", "Alex"];
+    for (var p = 0; p < preferred.length; p++) {
+      for (var v = 0; v < voices.length; v++) {
+        if (voices[v].name.indexOf(preferred[p]) !== -1 && voices[v].lang.indexOf("en") === 0) {
+          _enVoice = voices[v]; return;
+        }
+      }
+    }
+    for (var v = 0; v < voices.length; v++) {
+      if (voices[v].lang === "en-US") { _enVoice = voices[v]; return; }
+    }
+    for (var v = 0; v < voices.length; v++) {
+      if (voices[v].lang.indexOf("en") === 0) { _enVoice = voices[v]; return; }
+    }
+  }
+  window.speechSynthesis.getVoices();
+  if (window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = loadEnVoice;
+  }
+  loadEnVoice();
+
+  function speak(text, btn) {
+    if (!window.speechSynthesis) return;
+    if (!_voicesReady) loadEnVoice();
+    window.speechSynthesis.cancel();
+    document.querySelectorAll(".speak-btn.speaking").forEach(function(b) { b.classList.remove("speaking"); });
+    var utter = new SpeechSynthesisUtterance(text.replace(/\*\*/g, ""));
+    utter.lang = "en-US";
+    utter.rate = 0.92;
+    if (_enVoice) utter.voice = _enVoice;
+    if (btn) {
+      btn.classList.add("speaking");
+      utter.onend = function() { btn.classList.remove("speaking"); };
+      utter.onerror = function() { btn.classList.remove("speaking"); };
+    }
+    window.speechSynthesis.speak(utter);
+  }
+
+  // ── Click delegation: speak buttons + quiz toggle ──
+  contentEl.addEventListener("click", function(e) {
+    // Speak button (word or story)
+    var btn = e.target.closest(".speak-btn");
+    if (btn) {
+      e.stopPropagation();
+      var word = btn.getAttribute("data-speak");
+      var story = btn.getAttribute("data-speak-story");
+      speak(word || story || "", btn);
+      return;
+    }
+  });
+
+  // ── Category tabs ──
+  const tabs = document.querySelectorAll(".cat-tab");
+  function setActiveTab(catId) {
+    tabs.forEach(function(t) {
+      t.classList.toggle("active", t.dataset.cat === catId);
+    });
+  }
+  tabs.forEach(function(tab) {
+    tab.addEventListener("click", function() {
+      const id = tab.dataset.cat;
+      setActiveTab(id);
+      const section = document.getElementById("cat-" + id);
+      if (section) section.scrollIntoView({ behavior: "smooth" });
+    });
+  });
+
+  // ── Scroll spy: highlight active tab on scroll ──
+  let ticking = false;
+  window.addEventListener("scroll", function() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function() {
+      const sections = document.querySelectorAll(".cat-section");
+      let current = "";
+      sections.forEach(function(sec) {
+        const top = sec.getBoundingClientRect().top;
+        if (top < 180) current = sec.id.replace("cat-", "");
+      });
+      if (current) setActiveTab(current);
+      ticking = false;
+    });
+  });
+
+  // ── Theme toggle ──
+  const themeBtn = document.getElementById("theme-toggle");
+  function applyTheme(dark) {
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    themeBtn.textContent = dark ? "☀️" : "🌙";
+    try { localStorage.setItem("vocab-theme", dark ? "dark" : "light"); } catch(e) {}
+  }
+  themeBtn.addEventListener("click", function() {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    applyTheme(!isDark);
+  });
+  // Init theme
+  (function() {
+    var saved = null;
+    try { saved = localStorage.getItem("vocab-theme"); } catch(e) {}
+    if (saved) { applyTheme(saved === "dark"); }
+    else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) { applyTheme(true); }
+  })();
+
+  // ── Init ──
+  renderAll();
+  if (cats.length > 0) setActiveTab(cats[0].id);
+
+  // ── Hash routing ──
+  if (window.location.hash) {
+    var h = window.location.hash.replace("#", "");
+    var sec = document.getElementById("cat-" + h);
+    if (sec) { setActiveTab(h); setTimeout(function() { sec.scrollIntoView(); }, 100); }
+  }
+})();
+
+</script>
+</body>
+</html>
