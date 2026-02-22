@@ -203,13 +203,22 @@ footer {
   #main { max-width: 960px; }
 }
 
+.home-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 8px;
+  background: rgba(255,255,255,0.15); color: #fff;
+  text-decoration: none; font-size: 1.1rem; margin-right: 10px;
+  transition: background 0.2s;
+}
+.home-btn:hover { background: rgba(255,255,255,0.3); }
 </style>
 </head>
 <body>
 
 <header id="header">
   <div class="header-inner">
-    <div class="header-left">
+    <div class="header-left" style="display:flex;align-items:center;">
+      <a href="/" class="home-btn" title="홈으로">🏠</a>
       <h1>Chapter 8: Dealing with Others</h1>
       <span class="header-sub">사람과 일 다루기 — 156 words / 25 scenes</span>
     </div>
