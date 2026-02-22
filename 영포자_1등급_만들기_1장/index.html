@@ -397,16 +397,6 @@ const vocabData = {"categories": [{"id": "travel_sightseeing", "name": "Travel &
     }
     _firstSpeak = false;
     window.speechSynthesis.speak(utter);
-  });
-    var utter = new SpeechSynthesisUtterance(text.replace(/\*\*/g, ""));
-    utter.lang = "en-US";
-    utter.rate = 0.9;
-    if (btn) {
-      btn.classList.add("speaking");
-      utter.onend = function() { btn.classList.remove("speaking"); };
-      utter.onerror = function() { btn.classList.remove("speaking"); };
-    }
-    window.speechSynthesis.speak(utter);
   }
 
   // ── Click delegation: speak buttons + quiz toggle ──
